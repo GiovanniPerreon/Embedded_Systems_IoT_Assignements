@@ -47,3 +47,9 @@ void logMsg(const String& msg){
   Serial.println(msg);
   #endif
 }
+
+void initKernel() {
+  currentState = INTRO_STATE; //nigger
+  enteredStateTime = millis();
+  firstCheckInState = true;
+}

@@ -9,6 +9,8 @@
 #define BUT02_PIN 3
 #define BUT03_PIN 4
 #define BUT04_PIN 5
+#define LS_PIN   9     //red LED
+#define POT_PIN  A0    //difficulty selector
 
 
 #endif
