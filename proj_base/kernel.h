@@ -1,9 +1,8 @@
 #ifndef __KERNEL__
 #define __KERNEL__
+#define DEBUG
 
 #include "Arduino.h" 
-
-#define DEBUG
 
 /* general state management procedure */
 

@@ -17,5 +17,6 @@ void stage2();
 void stage3();
 void stage4();
 void finalize();
+int getDifficulty();
 
 #endif

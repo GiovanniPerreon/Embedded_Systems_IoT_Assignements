@@ -2,9 +2,11 @@
 #include "config.h"
 #include "core.h"
 #include "input.h" 
+#include "lcd.h"
 
 void setup() {
   initCore();
+  initLCD();
   initInput();
   changeState(INTRO_STATE);
 }
