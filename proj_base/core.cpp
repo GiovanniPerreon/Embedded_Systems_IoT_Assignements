@@ -33,6 +33,7 @@ void intro() {
     clearLCD();
     lcd.setCursor(0, 0); lcd.print("Welcome to TOS!");
     lcd.setCursor(0, 1); lcd.print("Press B1 to Start");
+    resetInput();
   }
 
   //Pulse red LED LS (non-blocking)
@@ -46,9 +47,8 @@ void intro() {
 
   // Read difficulty from potentiometer
   int v = analogRead(POT_PIN);
-  difficulty = 1 + (v * 4) / 1024;
-  if (difficulty < 1) difficulty = 1;
-  if (difficulty > 4) difficulty = 4;
+  difficulty = map(v, 0, 1022, 1, 4);
+  lcd.setCursor(0, 2); lcd.print("Difficulty: ");  lcd.print(getDifficulty());
 
   //Simulated “sleep” after 10 s of inactivity
   if (getCurrentTimeInState() > MAX_IDLE_TIME) {
@@ -59,10 +59,9 @@ void intro() {
     changeState(INTRO_STATE);           // wake returns to idle
     return;
   }
-
   // Start on B1 press
   // Normal path (real HW with interrupts): use the input module flag
-  if (isButtonPressed(0)) {             // button index 0 == B1
+  if (isButtonPressed(0)) {
     clearLCD();
     lcd.setCursor(0, 0); lcd.print("Go!");
     delay(700);
@@ -98,6 +97,7 @@ void stage1(){
 void stage2(){
   if (isJustEnteredInState()){
     Serial.println("Stage2...");
+    resetInput();
   }
   /* change the state if button 1 is pressed or max time elapsed*/
   if (isButtonPressed(1) || getCurrentTimeInState() > MAX_TIME_IN_STAGE2_STATE){
@@ -108,6 +108,7 @@ void stage2(){
 void stage3(){
   if (isJustEnteredInState()){
     Serial.println("Stage3...");
+    resetInput();
   }
   /* change the state if button 1 is pressed or max time elapsed*/
   if (isButtonPressed(2) || getCurrentTimeInState() > MAX_TIME_IN_STAGE3_STATE){
@@ -119,6 +120,7 @@ void stage3(){
 void stage4(){
   if (isJustEnteredInState()){
     Serial.println("Stage4...");
+    resetInput();
   }
   /* change the state if button 1 is pressed or max time elapsed*/
   if (isButtonPressed(3) || getCurrentTimeInState() > MAX_TIME_IN_STAGE4_STATE){
@@ -129,6 +131,7 @@ void stage4(){
 void finalize(){
   if (isJustEnteredInState()){
     Serial.println("Finalize...");
+    resetInput();
   }
   changeState(INTRO_STATE);
 }

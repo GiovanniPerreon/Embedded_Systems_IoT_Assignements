@@ -1,4 +1,5 @@
 #include "kernel.h"
+#include "core.h"
 
 /* current state */
 int currentState;
@@ -49,7 +50,7 @@ void logMsg(const String& msg){
 }
 
 void initKernel() {
-  currentState = INTRO_STATE; //nigger
+  changeState(INTRO_STATE);
   enteredStateTime = millis();
   firstCheckInState = true;
 }

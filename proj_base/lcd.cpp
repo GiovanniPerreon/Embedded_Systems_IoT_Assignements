@@ -1,16 +1,11 @@
 #include "Arduino.h"
-#include <LiquidCrystal_I2C.h> 
+#include "lcd.h" 
 
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 /* LCD logic*/
 void initLCD() {
    lcd.init();
    lcd.backlight();
-};
-
-void writeLCD() {
-  clearLCD();
-  lcd.setCursor(2, 1);
-  lcd.print("Hello World!");
 };
 
 void clearLCD() {
