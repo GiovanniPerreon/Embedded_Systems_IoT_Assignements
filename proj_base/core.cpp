@@ -5,33 +5,57 @@
 #include "config.h"
 #include "lcd.h"
 #include "generatesq.h"
-#include <Math.h>
+#include <math.h>
+
+// Automatic deep-sleep mode selector
+#ifndef USE_REAL_DEEPSLEEP
+  #if defined(ARDUINO_ARCH_AVR) && \
+     (defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_MEGA2560))
+    #define USE_REAL_DEEPSLEEP 1    // Real hardware supports LowPower library
+  #else
+    #define USE_REAL_DEEPSLEEP 0    // Simulation / unsupported board
+  #endif
+#endif
+
+#if USE_REAL_DEEPSLEEP
+  #include <LowPower.h>
+#endif
 
 #define MAX_TIME_IN_INTRO_STATE 1000
 #define MAX_TIME_IN_STAGE2_STATE 10000
 #define MAX_TIME_IN_STAGE3_STATE 10000
 #define MAX_TIME_IN_STAGE4_STATE 10000
-#define MAX_IDLE_TIME 10000UL //10 seconds before nap time
+#define MAX_IDLE_TIME 10000UL // 10 seconds before nap time
 
 int won = 0;
 
-// Local static vars just for the intro screen
 static int brightness = 0;                 // 0..255 PWM
 static int step = 6;                       // fade step
 static unsigned long lastFade = 0;
 static const unsigned long FADE_DT = 20;   // ~50 Hz
 static int difficulty = 1;                 // 1..4
 
-/* core business logic */
+// --- Wake ISR for deep sleep (B1) ---
+volatile bool wokeFlag = false;
+void wakeISR() { wokeFlag = true; }
 
-void initCore(){
+// ---------------------------------------------------------------------------
+// Core business logic
+// ---------------------------------------------------------------------------
+void initCore() {
   Serial.begin(9600);
+
+#if USE_REAL_DEEPSLEEP
+  Serial.println("DeepSleep: REAL (LowPower)");
+#else
+  Serial.println("DeepSleep: SIMULATED (no LowPower)");
+#endif
 }
 
 void intro() {
   if (isJustEnteredInState()) {
     Serial.println("Intro...");
-    pinMode(LS_PIN, OUTPUT);          // LS_PIN defined in config.h
+    pinMode(LS_PIN, OUTPUT);
     analogWrite(LS_PIN, 0);
 
     clearLCD();
@@ -40,7 +64,7 @@ void intro() {
     resetInput();
   }
 
-  //Pulse red LED LS (non-blocking)
+  // Pulse red LED LS (non-blocking)
   unsigned long now = millis();
   if (now - lastFade >= FADE_DT) {
     lastFade = now;
@@ -52,19 +76,35 @@ void intro() {
   // Read difficulty from potentiometer
   int v = analogRead(POT_PIN);
   difficulty = map(v, 0, 1022, 1, 4);
-  lcd.setCursor(0, 2); lcd.print("Difficulty: ");  lcd.print(getDifficulty());
+  lcd.setCursor(0, 1);  // LCD has only 2 rows (0 and 1)
+  lcd.print("Press B1 | L:");
+  lcd.print(difficulty);
+  lcd.print("  ");
 
-  //Simulated “sleep” after 10 s of inactivity
+  // ---- Deep sleep after 10 s of inactivity ----
   if (getCurrentTimeInState() > MAX_IDLE_TIME) {
     clearLCD();
     lcd.setCursor(0, 0); lcd.print("Sleeping...");
     lcd.setCursor(0, 1); lcd.print("Press B1 to wake");
-    delay(1500);                        // simulate sleep; real HW => LowPower.powerDown(...)
-    changeState(INTRO_STATE);           // wake returns to idle
+    delay(500); // brief pause so the message is visible
+
+  #if USE_REAL_DEEPSLEEP
+    // Arm interrupt on B1 (BUT01_PIN should be an INT-capable pin, e.g., D2 on UNO)
+    attachInterrupt(digitalPinToInterrupt(BUT01_PIN), wakeISR, FALLING);
+    LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
+    detachInterrupt(digitalPinToInterrupt(BUT01_PIN));
+    wokeFlag = false;
+  #else
+    // Tinkercad fallback: simulate a nap
+    delay(1500);
+  #endif
+
+    // On wake/simulated wake, restart intro fresh
+    changeState(INTRO_STATE);
     return;
   }
-  // Start on B1 press
-  // Normal path (real HW with interrupts): use the input module flag
+
+  // Start on B1 press (preferred: input module flag)
   if (isButtonPressed(0)) {
     clearLCD();
     lcd.setCursor(0, 0); lcd.print("Go!");
@@ -86,35 +126,35 @@ void intro() {
   }
 }
 
-void stage1(){
-  if (isJustEnteredInState()){
+void stage1() {
+  if (isJustEnteredInState()) {
     Serial.println("Stage1...");
     resetInput();
   }
 
   /* change the state if button 0 is pressed */
-  if (isButtonPressed(0)){
-    changeState(STAGE2_STATE);          
+  if (isButtonPressed(0)) {
+    changeState(STAGE2_STATE);
   }
 }
 
-void stage2(){
-  if (isJustEnteredInState()){
+void stage2() {
+  if (isJustEnteredInState()) {
     Serial.println("Stage2...");
     resetInput();
   }
-  
+
   randomSeed(analogRead(A0));
-  
+
   int sequence[SQLENGTH];
   generate(sequence);
 
   Serial.println(sequence[0]);
-  
+
   int answer[SQLENGTH] = {0};
   int buttonsPressed = 0;
 
-  while (getCurrentTimeInState() < (T1*pow(FACTOR, won)) && buttonsPressed < 4) {
+  while (getCurrentTimeInState() < (T1 * pow(FACTOR, won)) && buttonsPressed < 4) {
     for (int i = 0; i <= 3; i++) {
       if (isButtonPressed(i)) {
         digitalWrite(getLedPin(i), HIGH);
@@ -134,38 +174,37 @@ void stage2(){
   }
 }
 
-void stage3(){
-  if (isJustEnteredInState()){
+void stage3() {
+  if (isJustEnteredInState()) {
     Serial.println("Stage3...");
     resetInput();
   }
-  /* change the state if button 1 is pressed or max time elapsed*/
-  if (isButtonPressed(2) || getCurrentTimeInState() > MAX_TIME_IN_STAGE3_STATE){
-    changeState(STAGE4_STATE);          
+  /* change the state if button 1 is pressed or max time elapsed */
+  if (isButtonPressed(2) || getCurrentTimeInState() > MAX_TIME_IN_STAGE3_STATE) {
+    changeState(STAGE4_STATE);
   }
 }
 
-
-void stage4(){
-  if (isJustEnteredInState()){
+void stage4() {
+  if (isJustEnteredInState()) {
     Serial.println("Stage4...");
     resetInput();
   }
-  /* change the state if button 1 is pressed or max time elapsed*/
-  if (isButtonPressed(3) || getCurrentTimeInState() > MAX_TIME_IN_STAGE4_STATE){
-    changeState(FINAL_STATE);          
+  /* change the state if button 1 is pressed or max time elapsed */
+  if (isButtonPressed(3) || getCurrentTimeInState() > MAX_TIME_IN_STAGE4_STATE) {
+    changeState(FINAL_STATE);
   }
 }
 
-void finalize(){
-  if (isJustEnteredInState()){
+void finalize() {
+  if (isJustEnteredInState()) {
     Serial.println("Finalize...");
     resetInput();
   }
   changeState(INTRO_STATE);
 }
 
-//simple getter for difficulty
-int getDifficulty() { 
-  return difficulty; 
+// simple getter for difficulty
+int getDifficulty() {
+  return difficulty;
 }
