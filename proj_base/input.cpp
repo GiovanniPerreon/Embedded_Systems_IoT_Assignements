@@ -9,6 +9,8 @@
 // #define __DEBUG__
 
 uint8_t inputPins[NUM_BUTTONS] = {BUT01_PIN, BUT02_PIN, BUT03_PIN, BUT04_PIN};
+uint8_t outputPins[NUM_LED] = {LED1, LED2, LED3, LED4};
+
 bool buttonPressed[NUM_BUTTONS] = {false, false, false, false};
 
 /* used for debouncing */
@@ -34,6 +36,9 @@ void buttonHandler(int i){
 }
 
 void initInput(){
+  for (int i = 0; i < NUM_LED; i++) {
+    pinMode(outputPins[i], INPUT);      
+  }
   for (int i = 0; i < NUM_BUTTONS; i++) {
     pinMode(inputPins[i], INPUT);  
     enableInterrupt(inputPins[i], buttonHandlers[i], CHANGE);       
@@ -53,4 +58,8 @@ bool isButtonPressed(int buttonIndex){
 
 bool hasBeenPressed(int index){
   return buttonPressed[index]; 
+}
+
+int getLedPin(int index) {
+  return outputPins[index];
 }

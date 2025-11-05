@@ -4,12 +4,16 @@
 #include "input.h"
 #include "config.h"
 #include "lcd.h"
+#include "generatesq.h"
+#include <Math.h>
 
 #define MAX_TIME_IN_INTRO_STATE 1000
 #define MAX_TIME_IN_STAGE2_STATE 10000
 #define MAX_TIME_IN_STAGE3_STATE 10000
 #define MAX_TIME_IN_STAGE4_STATE 10000
 #define MAX_IDLE_TIME 10000UL //10 seconds before nap time
+
+int won = 0;
 
 // Local static vars just for the intro screen
 static int brightness = 0;                 // 0..255 PWM
@@ -99,9 +103,34 @@ void stage2(){
     Serial.println("Stage2...");
     resetInput();
   }
-  /* change the state if button 1 is pressed or max time elapsed*/
-  if (isButtonPressed(1) || getCurrentTimeInState() > MAX_TIME_IN_STAGE2_STATE){
-    changeState(STAGE3_STATE);          
+  
+  randomSeed(analogRead(A0));
+  
+  int sequence[SQLENGTH];
+  generate(sequence);
+
+  Serial.println(sequence[0]);
+  
+  int answer[SQLENGTH] = {0};
+  int buttonsPressed = 0;
+
+  while (getCurrentTimeInState() < (T1*pow(FACTOR, won)) && buttonsPressed < 4) {
+    for (int i = 0; i <= 3; i++) {
+      if (isButtonPressed(i)) {
+        digitalWrite(getLedPin(i), HIGH);
+        answer[buttonsPressed] = i + 1;
+        buttonsPressed++;
+      }
+    }
+  }
+
+  if (sequence == answer) {
+    Serial.println("GOOD! Score: XXX");
+    changeState(STAGE2_STATE);
+    won++;
+    return;
+  } else {
+    Serial.println("Game Over - Final Score XXX");
   }
 }
 
