@@ -133,6 +133,7 @@ void stage1() {
   /* change the state if button 0 is pressed */
   if (isButtonPressed(0)) {
     changeState(STAGE2_STATE);
+    resetInput();
   }
 }
 
@@ -152,28 +153,37 @@ void stage2() {
   Serial.println(sequence[2]);
   Serial.println(sequence[3]);
 
-  int answer[SQLENGTH] = {0};
+  clearLCD();
+  lcd.setCursor(0, 0); lcd.print(sequence[0]);
+  lcd.setCursor(1, 0); lcd.print(sequence[1]);
+  lcd.setCursor(2, 0); lcd.print(sequence[2]);
+  lcd.setCursor(3, 0); lcd.print(sequence[3]);
+
+  int answer[SQLENGTH] = {0, 0, 0, 0};
   int buttonsPressed = 0;
 
   while (getCurrentTimeInState() < (T1 * pow(FACTOR, score)) && buttonsPressed < 4) {
+    delay(50);
     for (int i = 0; i <= 3; i++) {
-      if (isButtonPressed(i)) {
+      if (isButtonPressed(i) && answer[0] != (i + 1) && answer[1]!= (i + 1) && answer[2]!= (i + 1)) {
+        Serial.println(i + 1);
+        resetInput();
         digitalWrite(getLedPin(i), HIGH);
         answer[buttonsPressed] = i + 1;
         buttonsPressed++;
       }
     }
   }
-
-  if (sequence == answer) {
-    Serial.println("GOOD! Score: ");
-    Serial.println(score);
+  clearLCD();
+  if (sequence[0]==answer[0]&&sequence[1]==answer[1]&&sequence[2]==answer[2]&&sequence[3]==answer[3]) {
     score++;
+    lcd.setCursor(0, 0); lcd.print("GOOD! Score: ");
+    lcd.setCursor(0, 1); lcd.print(score);
     changeState(STAGE2_STATE);
-    return;
   } else {
-    Serial.println("Game Over - Final Score: ");
-    Serial.println(score);
+    lcd.setCursor(0, 0); lcd.print("Game Over - Final Score: ");
+    lcd.setCursor(0, 1); lcd.print(score);
+    changeState(STAGE3_STATE);
     return;
   }
 }

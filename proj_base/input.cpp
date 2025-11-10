@@ -37,7 +37,7 @@ void buttonHandler(int i){
 
 void initInput(){
   for (int i = 0; i < NUM_LED; i++) {
-    pinMode(outputPins[i], INPUT);      
+    pinMode(outputPins[i], OUTPUT);      
   }
   for (int i = 0; i < NUM_BUTTONS; i++) {
     pinMode(inputPins[i], INPUT);  
