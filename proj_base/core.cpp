@@ -27,7 +27,7 @@
 #define MAX_TIME_IN_STAGE4_STATE 10000
 #define MAX_IDLE_TIME 10000UL // 10 seconds before nap time
 
-int won = 0;
+int score = 0;
 
 static int brightness = 0;                 // 0..255 PWM
 static int step = 6;                       // fade step
@@ -90,9 +90,7 @@ void intro() {
 
   #if USE_REAL_DEEPSLEEP
     // Arm interrupt on B1 (BUT01_PIN should be an INT-capable pin, e.g., D2 on UNO)
-    attachInterrupt(digitalPinToInterrupt(BUT01_PIN), wakeISR, FALLING);
     LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
-    detachInterrupt(digitalPinToInterrupt(BUT01_PIN));
     wokeFlag = false;
   #else
     // Tinkercad fallback: simulate a nap
@@ -148,13 +146,16 @@ void stage2() {
 
   int sequence[SQLENGTH];
   generate(sequence);
-
+  
   Serial.println(sequence[0]);
+  Serial.println(sequence[1]);
+  Serial.println(sequence[2]);
+  Serial.println(sequence[3]);
 
   int answer[SQLENGTH] = {0};
   int buttonsPressed = 0;
 
-  while (getCurrentTimeInState() < (T1 * pow(FACTOR, won)) && buttonsPressed < 4) {
+  while (getCurrentTimeInState() < (T1 * pow(FACTOR, score)) && buttonsPressed < 4) {
     for (int i = 0; i <= 3; i++) {
       if (isButtonPressed(i)) {
         digitalWrite(getLedPin(i), HIGH);
@@ -165,12 +166,15 @@ void stage2() {
   }
 
   if (sequence == answer) {
-    Serial.println("GOOD! Score: XXX");
+    Serial.println("GOOD! Score: ");
+    Serial.println(score);
+    score++;
     changeState(STAGE2_STATE);
-    won++;
     return;
   } else {
-    Serial.println("Game Over - Final Score XXX");
+    Serial.println("Game Over - Final Score: ");
+    Serial.println(score);
+    return;
   }
 }
 
