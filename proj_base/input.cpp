@@ -35,6 +35,15 @@ void buttonHandler(int i){
   }
 }
 
+bool isAnyButtonPressed() {
+  for (int i = 0; i < NUM_BUTTONS; i++) {
+    if (isButtonPressed(i)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 void initInput(){
   for (int i = 0; i < NUM_LED; i++) {
     pinMode(outputPins[i], OUTPUT);      

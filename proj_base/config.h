@@ -17,6 +17,9 @@
 #define LS_PIN   9     //red LED
 #define POT_PIN  A0    //difficulty selector
 #define SQLENGTH 4  //Length of the number sequence
+#define SHOWNTIME 4000
+#define T1 20000
+#define FACTOR 0.9
 
 
 

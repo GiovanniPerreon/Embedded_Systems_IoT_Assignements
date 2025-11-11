@@ -7,8 +7,6 @@
 #define STAGE3_STATE  4
 #define STAGE4_STATE  5
 #define FINAL_STATE   6 
-#define T1 20000
-#define FACTOR 0.9
 /* core business logic  */
 
 void initCore();

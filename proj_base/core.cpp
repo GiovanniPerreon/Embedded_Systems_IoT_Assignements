@@ -34,6 +34,7 @@ static int step = 6;                       // fade step
 static unsigned long lastFade = 0;
 static const unsigned long FADE_DT = 20;   // ~50 Hz
 static int difficulty = 1;                 // 1..4
+double timeLimit = T1;
 
 // --- Wake ISR for deep sleep (B1) ---
 volatile bool wokeFlag = false;
@@ -143,29 +144,47 @@ void stage2() {
     resetInput();
   }
 
+  while (isAnyButtonPressed()) {
+    
+  }
+
   randomSeed(analogRead(A0));
+
+  for (int i; i < SQLENGTH; i++) {
+    digitalWrite(getLedPin(i), LOW);
+  }
 
   int sequence[SQLENGTH];
   generate(sequence);
   
-  Serial.println(sequence[0]);
-  Serial.println(sequence[1]);
-  Serial.println(sequence[2]);
-  Serial.println(sequence[3]);
-
   clearLCD();
   lcd.setCursor(0, 0); lcd.print(sequence[0]);
   lcd.setCursor(1, 0); lcd.print(sequence[1]);
   lcd.setCursor(2, 0); lcd.print(sequence[2]);
   lcd.setCursor(3, 0); lcd.print(sequence[3]);
+  
+  delay(SHOWNTIME);
 
+  clearLCD();
+
+  resetInput();
+  
   int answer[SQLENGTH] = {0, 0, 0, 0};
   int buttonsPressed = 0;
+  timeLimit = timeLimit * (FACTOR - ((difficulty - 1) / 5));
+  int counter = 0;
+  int timeLeft;
 
-  while (getCurrentTimeInState() < (T1 * pow(FACTOR, score)) && buttonsPressed < 4) {
-    delay(50);
-    for (int i = 0; i <= 3; i++) {
-      if (isButtonPressed(i) && answer[0] != (i + 1) && answer[1]!= (i + 1) && answer[2]!= (i + 1)) {
+  while (getCurrentTimeInState() - SHOWNTIME < timeLimit && buttonsPressed < SQLENGTH) {
+    updateStateTime();
+    if (counter > 1000) {
+      counter = 0;
+      timeLeft = (timeLimit - (getCurrentTimeInState() - SHOWNTIME)) / 1000;
+      clearLCD();
+      lcd.setCursor(0, 0); lcd.print(timeLeft);
+    }
+    for (int i = 0; i <= SQLENGTH - 1; i++) {
+      if (isButtonPressed(i) && !isPresent(answer, i + 1)) {
         Serial.println(i + 1);
         resetInput();
         digitalWrite(getLedPin(i), HIGH);
@@ -173,16 +192,21 @@ void stage2() {
         buttonsPressed++;
       }
     }
+    counter++;
   }
+  
   clearLCD();
-  if (sequence[0]==answer[0]&&sequence[1]==answer[1]&&sequence[2]==answer[2]&&sequence[3]==answer[3]) {
+  
+  if (isEqual(sequence, answer)) {
     score++;
     lcd.setCursor(0, 0); lcd.print("GOOD! Score: ");
-    lcd.setCursor(0, 1); lcd.print(score);
+    lcd.setCursor(14, 0); lcd.print(score*100);
+    delay(2000);
     changeState(STAGE2_STATE);
   } else {
-    lcd.setCursor(0, 0); lcd.print("Game Over - Final Score: ");
-    lcd.setCursor(0, 1); lcd.print(score);
+    lcd.setCursor(0, 0); lcd.print("Game Over!");
+    lcd.setCursor(0, 1); lcd.print("Final Score: ");
+    lcd.setCursor(13, 1); lcd.print(score*100);
     changeState(STAGE3_STATE);
     return;
   }
