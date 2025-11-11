@@ -4,7 +4,7 @@
 #include "input.h"
 #include "config.h"
 #include "lcd.h"
-#include "generatesq.h"
+#include "arrayHandler.h"
 #include <math.h>
 
 // Automatic deep-sleep mode selector

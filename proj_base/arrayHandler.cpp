@@ -1,4 +1,4 @@
-#include "generatesq.h"
+#include "arrayHandler.h"
 #include "arduino.h"
 #include "config.h"
 
