@@ -47,7 +47,6 @@ void intro() {
     if (brightness >= 255 || brightness <= 0) step = -step;
     analogWrite(LS_PIN, brightness);
   }
-
   // Read difficulty from potentiometer
   int v = analogRead(POT_PIN);
   difficulty = map(v, 0, 1023, 1, 5);
@@ -57,47 +56,30 @@ void intro() {
   lcd.setCursor(0, 2);
   lcd.print("Difficulty: ");
   lcd.print(difficulty);
-
   // ---- Deep sleep after 10 s of inactivity ----
   if (getCurrentTimeInState() > MAX_IDLE_TIME) {
     clearLCD();
     lcd.setCursor(0, 0); lcd.print("Sleeping...");
     lcd.setCursor(0, 1); lcd.print("Press B1 to wake");
-    delay(500); // brief pause so the message is visible
-
     enterDeepSleep();  // Enter deep sleep mode
-
+    delay(50);
     // After wake-up, reset the state
     changeState(INTRO_STATE);
     return;
   }
-
   // Start on B1 press (preferred: input module flag)
   if (isButtonPressed(0)) {
+    analogWrite(LS_PIN, 0);
     clearLCD();
     lcd.setCursor(0, 0); lcd.print("Go!");
-    delay(700);
     changeState(STAGE1_STATE);
     return;
-  }
-
-  // Fallback for Tinkercad (no interrupts): poll the pin directly
-  if (digitalRead(BUT01_PIN) == HIGH) { // defined in config.h
-    delay(20);                          // simple debounce
-    if (digitalRead(BUT01_PIN) == HIGH) {
-      clearLCD();
-      lcd.setCursor(0, 0); lcd.print("Go!");
-      delay(700);
-      changeState(STAGE1_STATE);
-      return;
-    }
   }
 }
 
 // Stage 1 logic (unchanged)
 void stage1() {
   if (isJustEnteredInState()) {
-    analogWrite(LS_PIN, 0);
     Serial.println("Stage1...");
     score = 0;
     resetInput();
@@ -136,12 +118,11 @@ void stage2() {
 
   delay(SHOWNTIME);  // Show the sequence for a short period
   clearLCD();
-
   resetInput();
 
   int answer[SQLENGTH] = {0, 0, 0, 0};  // Store the player's answer
   int buttonsPressed = 0;
-  timeLimit = timeLimit * (FACTOR - ((difficulty - 1) / 5));
+  timeLimit = timeLimit * (FACTOR - (difficulty - 1) * ((FACTOR - 0.5) / 3));
   int counter = 0;
   int timeLeft;
 
@@ -180,12 +161,12 @@ void stage2() {
     changeState(STAGE2_STATE);  // Go back to stage2 if correct
   } else {
     analogWrite(LS_PIN, 255);
-    delay(2000);
-    analogWrite(LS_PIN, 0);
     lcd.setCursor(0, 0); lcd.print("Game Over!");
     lcd.setCursor(0, 1); lcd.print("Final Score: ");
     lcd.setCursor(13, 1); lcd.print(score * 100);
-    delay(10000);
+    delay(2000);
+    analogWrite(LS_PIN, 0);
+    delay(8000);
     changeState(STAGE3_STATE);  // Move to stage 3 after game over
     return;
   }
