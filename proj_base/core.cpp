@@ -117,16 +117,12 @@ void stage2() {
     resetInput();
   }
 
-  while (isAnyButtonPressed()) {
+  //while (isAnyButtonPressed()) {
     // Wait for any button to be pressed to start
-  }
+    // Doesn't actually work as expected?
+  //}
 
   randomSeed(analogRead(A0));
-
-  // Reset all LEDs to off
-  for (int i = 0; i < SQLENGTH; i++) {
-    digitalWrite(getLedPin(i), LOW);
-  }
 
   int sequence[SQLENGTH];
   generate(sequence); // Generate the sequence to be displayed
@@ -158,7 +154,6 @@ void stage2() {
       clearLCD();
       lcd.setCursor(0, 0); lcd.print(timeLeft);  // Display the remaining time
     }
-
     // Check if any button was pressed
     for (int i = 0; i < SQLENGTH; i++) {
       if (isButtonPressed(i) && !isPresent(answer, i + 1)) {
@@ -171,9 +166,11 @@ void stage2() {
     }
     counter++;
   }
-
+  // Reset all LEDs to off
+  for (int i = 0; i < SQLENGTH; i++) {
+    digitalWrite(getLedPin(i), LOW);
+  }
   clearLCD();
-
   // Check if the player's answer matches the sequence
   if (isEqual(sequence, answer)) {
     score++;
@@ -182,9 +179,13 @@ void stage2() {
     delay(2000);
     changeState(STAGE2_STATE);  // Go back to stage2 if correct
   } else {
+    analogWrite(LS_PIN, 255);
+    delay(2000);
+    analogWrite(LS_PIN, 0);
     lcd.setCursor(0, 0); lcd.print("Game Over!");
     lcd.setCursor(0, 1); lcd.print("Final Score: ");
     lcd.setCursor(13, 1); lcd.print(score * 100);
+    delay(10000);
     changeState(STAGE3_STATE);  // Move to stage 3 after game over
     return;
   }

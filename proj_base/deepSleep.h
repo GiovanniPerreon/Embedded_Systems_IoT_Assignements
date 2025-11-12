@@ -1,5 +1,5 @@
-#ifndef DEEPSLEEP_H
-#define DEEPSLEEP_H
+#ifndef __DEEPSLEEP_H__
+#define __DEEPSLEEP_H__
 
 // Include necessary libraries
 #include <LowPower.h>
@@ -16,4 +16,4 @@ void wakeUpFromDeepSleep();
 // Flag to indicate if the device has woken up from deep sleep
 extern volatile bool wokeFlag;
 
-#endif // DEEPSLEEP_H
+#endif
