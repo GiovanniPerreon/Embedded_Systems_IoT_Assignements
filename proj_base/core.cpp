@@ -28,7 +28,6 @@
 #define MAX_IDLE_TIME 10000UL // 10 seconds before nap time
 
 int score = 0;
-
 static int brightness = 0;                 // 0..255 PWM
 static int step = 6;                       // fade step
 static unsigned long lastFade = 0;
@@ -77,10 +76,9 @@ void intro() {
   // Read difficulty from potentiometer
   int v = analogRead(POT_PIN);
   difficulty = map(v, 0, 1022, 1, 4);
-  lcd.setCursor(0, 1);  // LCD has only 2 rows (0 and 1)
-  lcd.print("Press B1 | L:");
+  lcd.setCursor(0, 2);
+  lcd.print("Difficulty: ");
   lcd.print(difficulty);
-  lcd.print("  ");
 
   // ---- Deep sleep after 10 s of inactivity ----
   if (getCurrentTimeInState() > MAX_IDLE_TIME) {
@@ -127,7 +125,9 @@ void intro() {
 
 void stage1() {
   if (isJustEnteredInState()) {
+    analogWrite(LS_PIN, 0);
     Serial.println("Stage1...");
+    score = 0;
     resetInput();
   }
 
@@ -141,7 +141,7 @@ void stage1() {
 void stage2() {
   if (isJustEnteredInState()) {
     Serial.println("Stage2...");
-    resetInput();
+    //resetInput();
   }
 
   while (isAnyButtonPressed()) {

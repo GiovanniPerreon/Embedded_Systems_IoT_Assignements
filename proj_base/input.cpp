@@ -38,9 +38,11 @@ void buttonHandler(int i){
 bool isAnyButtonPressed() {
   for (int i = 0; i < NUM_BUTTONS; i++) {
     if (isButtonPressed(i)) {
+      Serial.println("true;");
       return true;
     }
   }
+  Serial.println("not true;");
   return false;
 }
 
