@@ -26,9 +26,6 @@ void loop(){
   case STAGE3_STATE:
     stage3();
     break;
-  case STAGE4_STATE:
-    stage4();
-    break;
   case FINAL_STATE:
     finalize();
     break;

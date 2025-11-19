@@ -6,8 +6,6 @@
 
 #define BOUNCING_TIME 50
 
-// #define __DEBUG__
-
 uint8_t inputPins[NUM_BUTTONS] = {BUT01_PIN, BUT02_PIN, BUT03_PIN, BUT04_PIN};
 uint8_t outputPins[NUM_LED] = {LED1, LED2, LED3, LED4};
 
