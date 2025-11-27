@@ -4,6 +4,7 @@
 #include "Kernel/Scheduler.h"
 #include "Tasks/BlinkTask.h"
 #include "Tasks/PrintTask.h"
+#include "Tasks/ButtonTask.h"
 
 extern Scheduler sched;
 
@@ -24,9 +25,13 @@ void initState(){
 
     Task* t1 = new PrintTask(t0);
     t1->init(500);
-    
+
+    Task* t2 = new ButtonTask(2);
+    t2->init(50);
+
     sched.addTask(t0);
     sched.addTask(t1);
+    sched.addTask(t2);
     
     logMsg("Tasks initialized. Starting scheduler...");
     changeState(RUNNING_STATE);
