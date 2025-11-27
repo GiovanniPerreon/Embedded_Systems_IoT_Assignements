@@ -1,9 +1,9 @@
 #include "core.h"
 #include "Arduino.h"
-#include "kernel.h"
-#include "Scheduler.h"
-#include "BlinkTask.h"
-#include "PrintTask.h"
+#include "Kernel/kernel.h"
+#include "Kernel/Scheduler.h"
+#include "Tasks/BlinkTask.h"
+#include "Tasks/PrintTask.h"
 
 extern Scheduler sched;
 

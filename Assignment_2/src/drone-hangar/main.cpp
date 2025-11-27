@@ -1,7 +1,7 @@
-#include "kernel.h"
+#include "Kernel/kernel.h"
 #include "config.h"
 #include "core.h"
-#include "Scheduler.h"
+#include "Kernel/Scheduler.h"
 
 Scheduler sched;
 
