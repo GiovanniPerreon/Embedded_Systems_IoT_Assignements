@@ -15,7 +15,6 @@ void ServoTask::init(int period){
 void ServoTask::tick(){
   switch(state) {
     case AT_0:
-      // Send continuous pulses for position 0
       for(int i = 0; i < 50; i++) {
         servo->setPosition(0);
       }
@@ -23,7 +22,6 @@ void ServoTask::tick(){
       Serial.println("Servo at 0, moving to 180");
       break;
     case AT_180:
-      // Send continuous pulses for position 180
       for(int i = 0; i < 50; i++) {
         servo->setPosition(180);
       }

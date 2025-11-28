@@ -22,12 +22,11 @@ void ServoMotor::setPosition(int angle){
     angle = 0;
   }
   if (_on) {
-    // Convert angle (0-180) to pulse width (calibrated: shifted 20° right)
     int pulseWidth = map(angle, 0, 180, 600, 2500);
     digitalWrite(pin, HIGH);
     delayMicroseconds(pulseWidth);
     digitalWrite(pin, LOW);
-    delay(20 - (pulseWidth / 1000)); // 20ms period
+    delay(20 - (pulseWidth / 1000));
   }
 }
 

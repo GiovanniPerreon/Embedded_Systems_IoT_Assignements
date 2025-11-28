@@ -6,6 +6,9 @@
 #include "Tasks/PrintTask.h"
 #include "Tasks/ButtonTask.h"
 #include "Tasks/ServoTask.h"
+#include "Tasks/TempTask.h"
+#include "Tasks/UltrasonicTask.h"
+#include "Tasks/PIRTask.h"
 
 extern Scheduler sched;
 
@@ -31,12 +34,24 @@ void initState(){
     t2->init(50);
 
     Task* t3 = new ServoTask(9);
-    t3->init(1000);
+    t3->init(10000);
+
+    Task* t4 = new TempTask(A1);
+    t4->init(2000);
+
+    Task* t5 = new UltrasonicTask(4, 5); // trig=4, echo=5
+    t5->init(3000);
+
+    Task* t6 = new PIRTask(3); // PIR sensor on pin 3
+    t6->init(100);
 
     sched.addTask(t0);
     sched.addTask(t1);
     sched.addTask(t2);
     sched.addTask(t3);
+    sched.addTask(t4);
+    sched.addTask(t5);
+    sched.addTask(t6);
     
     logMsg("Tasks initialized. Starting scheduler...");
     changeState(RUNNING_STATE);
