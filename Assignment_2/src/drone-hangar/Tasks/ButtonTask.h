@@ -15,6 +15,7 @@ public:
   ButtonTask(int pin);  
   void init(int period);  
   void tick();
+  bool isButtonPressed();
 };
 
 #endif

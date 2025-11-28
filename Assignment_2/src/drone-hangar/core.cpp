@@ -9,6 +9,7 @@
 #include "Tasks/TempTask.h"
 #include "Tasks/UltrasonicTask.h"
 #include "Tasks/PIRTask.h"
+#include "Tasks/LCDTask.h"
 
 extern Scheduler sched;
 
@@ -45,6 +46,9 @@ void initState(){
     Task* t6 = new PIRTask(3); // PIR sensor on pin 3
     t6->init(100);
 
+    Task* t7 = new LCDTask(0x27, 16, 2, (ButtonTask*)t2); // LCD 16x2 at 0x27, displays button state
+    t7->init(200);
+
     sched.addTask(t0);
     sched.addTask(t1);
     sched.addTask(t2);
@@ -52,6 +56,7 @@ void initState(){
     sched.addTask(t4);
     sched.addTask(t5);
     sched.addTask(t6);
+    sched.addTask(t7);
     
     logMsg("Tasks initialized. Starting scheduler...");
     changeState(RUNNING_STATE);

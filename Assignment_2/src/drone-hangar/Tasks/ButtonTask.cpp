@@ -20,3 +20,7 @@ void ButtonTask::tick(){
     state = NOT_PRESSED;
   }
 }
+
+bool ButtonTask::isButtonPressed(){
+  return state == PRESSED;
+}
