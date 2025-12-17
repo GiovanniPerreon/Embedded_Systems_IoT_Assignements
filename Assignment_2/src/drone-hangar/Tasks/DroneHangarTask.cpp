@@ -16,6 +16,7 @@ void DroneHangarTask::tick(){
   if (!tempTask.isInAlarm()) {
     switch(state){
       case DRONE_INSIDE:
+        lcd.clear();
         lcd.printLCD("Drone Inside", 0, 0);
         if (Serial.read() == OPEN_MESSAGE && !tempTask.isInPreAlarm()) {
           state = TAKE_OFF;
