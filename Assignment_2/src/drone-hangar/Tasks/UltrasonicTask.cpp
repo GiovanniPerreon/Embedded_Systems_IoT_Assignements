@@ -15,3 +15,7 @@ void UltrasonicTask::tick(){
   Serial.print(distance);
   Serial.println(" cm");
 }
+
+int UltrasonicTask::getDistance() {
+    return sensor->getDistance();
+}

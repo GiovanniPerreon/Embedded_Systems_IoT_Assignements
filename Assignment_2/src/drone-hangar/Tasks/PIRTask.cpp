@@ -23,3 +23,7 @@ void PIRTask::tick(){
     lastMotionState = motionDetected;
   }
 }
+
+boolean PIRTask::isMotionDetected() {
+  return sensor->isMotionDetected();
+}

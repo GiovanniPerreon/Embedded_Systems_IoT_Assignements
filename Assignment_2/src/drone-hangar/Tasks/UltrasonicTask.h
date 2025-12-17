@@ -13,6 +13,7 @@ public:
   UltrasonicTask(int trigPin, int echoPin);  
   void init(int period);  
   void tick();
+  int getDistance();
 };
 
 #endif

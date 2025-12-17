@@ -3,7 +3,6 @@
 
 #include "Task.h"
 #include "../Devices/LCD.h"
-#include "ButtonTask.h"
 
 class LCDTask: public Task {
 
@@ -12,9 +11,11 @@ class LCDTask: public Task {
 
 public:
 
-  LCDTask(int address, int cols, int rows, ButtonTask* buttonTask);  
+  LCDTask(int address, int cols, int rows);  
   void init(int period);  
   void tick();
+  void printLCD(const char* text, int col, int row);
+  void clear();
 };
 
 #endif

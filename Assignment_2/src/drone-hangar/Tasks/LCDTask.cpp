@@ -1,9 +1,8 @@
 #include "LCDTask.h"
 #include "Arduino.h"
 
-LCDTask::LCDTask(int address, int cols, int rows, ButtonTask* buttonTask){
+LCDTask::LCDTask(int address, int cols, int rows){
   this->lcd = new LCD(address, cols, rows);
-  this->buttonTask = buttonTask;
 }
   
 void LCDTask::init(int period){
@@ -22,4 +21,13 @@ void LCDTask::tick(){
   } else {
     lcd->print("NOT PRESSED");
   }
+}
+
+void LCDTask::printLCD(const char* text, int col, int row){
+  lcd->setCursor(col, row);
+  lcd->print(text);
+}
+
+void LCDTask::clear(){
+  lcd->clear();
 }

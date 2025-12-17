@@ -15,6 +15,8 @@ public:
   ServoTask(int pin);  
   void init(int period);  
   void tick();
+  void open();
+  void close();
 };
 
 #endif

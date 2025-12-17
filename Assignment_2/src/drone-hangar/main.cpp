@@ -8,6 +8,7 @@ Scheduler sched;
 void setup() {
   initCore();
   changeState(INIT_STATE);
+  Serial.begin(9600);
 }
 
 void loop(){ 

@@ -22,3 +22,11 @@ void BlinkTask::tick(){
       break;
   }
 }
+
+void BlinkTask::on() {
+  state = ON;
+}
+
+void BlinkTask::off() {
+  state = OFF;
+}

@@ -15,6 +15,8 @@ public:
   BlinkTask(int pin);  
   void init(int period);  
   void tick();
+  void on();
+  void off();
 };
 
 #endif

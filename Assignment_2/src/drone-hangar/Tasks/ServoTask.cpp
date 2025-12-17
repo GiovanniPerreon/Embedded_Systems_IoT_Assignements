@@ -28,5 +28,13 @@ void ServoTask::tick(){
       state = AT_0;
       Serial.println("Servo at 180, moving to 0");
       break;
-  }
+    }
+}
+
+void ServoTask::open(){
+  state = AT_180;
+}
+
+void ServoTask::close(){
+  state = AT_0;
 }
