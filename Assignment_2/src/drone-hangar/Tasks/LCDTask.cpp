@@ -11,16 +11,7 @@ void LCDTask::init(int period){
 }
   
 void LCDTask::tick(){
-  lcd->clear();
-  lcd->setCursor(0, 0);
-  lcd->print("Button: ");
-  lcd->setCursor(0, 1);
-  
-  if (buttonTask->isButtonPressed()){
-    lcd->print("PRESSED");
-  } else {
-    lcd->print("NOT PRESSED");
-  }
+
 }
 
 void LCDTask::printLCD(const char* text, int col, int row){

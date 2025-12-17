@@ -24,6 +24,7 @@ void DroneHangarTask::tick(){
 
       case TAKE_OFF:
         servoMotor.open();
+        lcd.clear();
         lcd.printLCD("Taking Off", 0, 0);
         led.on();
         if (ultrasonicSensor.getDistance() > D1) {
@@ -33,6 +34,9 @@ void DroneHangarTask::tick(){
 
       case TAKE_OFF_CHECK:
         long checkStart = getCurrentTimeInState();
+        lcd.clear();
+        lcd.printLCD("Take off check", 0, 0);
+        led.on();
         while (getCurrentTimeInState() - checkStart < T1) {
           if (ultrasonicSensor.getDistance() < D1) {
             led.off();

@@ -14,7 +14,7 @@ public:
   PIRTask(int pin);  
   void init(int period);  
   void tick();
-  boolean isMotionDetected();
+  bool isMotionDetected();
 };
 
 #endif

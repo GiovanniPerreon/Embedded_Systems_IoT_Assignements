@@ -7,7 +7,6 @@
 class LCDTask: public Task {
 
   LCD* lcd;
-  ButtonTask* buttonTask;
 
 public:
 

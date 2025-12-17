@@ -18,17 +18,18 @@ void ServoTask::tick(){
       for(int i = 0; i < 50; i++) {
         servo->setPosition(0);
       }
-      state = AT_180;
-      Serial.println("Servo at 0, moving to 180");
+      Serial.println("Servo at 0");
       break;
     case AT_180:
       for(int i = 0; i < 50; i++) {
         servo->setPosition(180);
       }
-      state = AT_0;
-      Serial.println("Servo at 180, moving to 0");
+      Serial.println("Servo at 180");
       break;
     }
+    //case NOTHING:
+      // do nothing
+      //break;
 }
 
 void ServoTask::open(){

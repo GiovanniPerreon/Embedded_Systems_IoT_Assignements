@@ -36,10 +36,10 @@ void initState(){
     t2->init(50);
 
     Task* t3 = new ServoTask(9);
-    t3->init(10000);
+    t3->init(500);
 
     Task* t5 = new UltrasonicTask(4, 5); // trig=4, echo=5
-    t5->init(3000);
+    t5->init(1000);
 
     Task* t6 = new PIRTask(3); // PIR sensor on pin 3
     t6->init(100);
@@ -60,9 +60,15 @@ void initState(){
       *(TempTask*)t4
     );
     t8->init(100);
-
+    
+    sched.addTask(t6);
+    sched.addTask(t2);
+    sched.addTask(t0);
+    sched.addTask(t5);
+    sched.addTask(t7);
     sched.addTask(t8);
     sched.addTask(t4);
+    sched.addTask(t3);
     
     logMsg("Tasks initialized. Starting scheduler...");
     changeState(RUNNING_STATE);

@@ -27,10 +27,9 @@ void TempTask::tick(){
         state = HIGHTEMP;
       }
       break;
-
-    case HIGHTEMP:
-      long checkStart = getCurrentTimeInState();
-      while (getCurrentTimeInState() - checkStart < T3) {
+    case HIGHTEMP: {
+      long checkStartT3 = getCurrentTimeInState();
+      while (getCurrentTimeInState() - checkStartT3 < T3) {
         temperature = sensor->getTemperature();
         if (temperature < TEMP1) {
           state = NORMAL;
@@ -38,7 +37,7 @@ void TempTask::tick(){
       }
       state = PREALARM;
       break;
-
+    }
     case PREALARM:
       //disable new take offs and landings
       if(temperature >= TEMP2){
@@ -47,10 +46,9 @@ void TempTask::tick(){
         state = NORMAL;
       }
       break;
-
-    case VERYHIGHTEMP:
-      long checkStart = getCurrentTimeInState();
-      while (getCurrentTimeInState() - checkStart < T4) {
+    case VERYHIGHTEMP: {
+      long checkStartT4 = getCurrentTimeInState();
+      while (getCurrentTimeInState() - checkStartT4 < T4) {
         temperature = sensor->getTemperature();
         if (temperature < TEMP2) {
           state = PREALARM;
@@ -58,7 +56,7 @@ void TempTask::tick(){
       }
       state = ALARM;
       break;
-
+    }
     case ALARM:
       //disable all operations
       servo.close();
@@ -72,3 +70,4 @@ void TempTask::tick(){
       }
       break;
   }
+}
