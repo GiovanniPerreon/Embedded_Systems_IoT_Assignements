@@ -62,6 +62,7 @@ void DroneHangarTask::tick(){
       case LANDING:
         lcd.printLCD("Landing", 0, 0);
         led.on();
+        Serial.println("Distace: " + String(ultrasonicSensor.getDistance()));
         if (ultrasonicSensor.getDistance() < D2) {
           state = LANDING_CHECK;
         }
@@ -70,6 +71,7 @@ void DroneHangarTask::tick(){
       case LANDING_CHECK:
         long landingCheckStart = getCurrentTimeInState();
         while (getCurrentTimeInState() - landingCheckStart < T2) {
+          Serial.println("Distace: " + String(ultrasonicSensor.getDistance()));
           if (ultrasonicSensor.getDistance() > D2) {
             state = DRONE_OUT;;
           }
