@@ -60,15 +60,17 @@ void initState(){
       *(TempTask*)t4
     );
     t8->init(100);
-    
-    sched.addTask(t6);
-    sched.addTask(t2);
+
     sched.addTask(t0);
+    sched.addTask(t1);
+    sched.addTask(t2);
+    sched.addTask(t3);
+    sched.addTask(t4);
     sched.addTask(t5);
+    sched.addTask(t6);
     sched.addTask(t7);
     sched.addTask(t8);
     sched.addTask(t4);
-    sched.addTask(t3);
     
     logMsg("Tasks initialized. Starting scheduler...");
     changeState(RUNNING_STATE);
