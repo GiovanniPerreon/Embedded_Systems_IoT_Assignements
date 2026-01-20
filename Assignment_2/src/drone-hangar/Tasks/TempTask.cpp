@@ -62,7 +62,7 @@ void TempTask::tick(){
       servo.close();
       led.on();
       lcd.printLCD("ALARM", 0, 0);
-      Serial.println(ALARM_MESSAGE);
+      Serial.println(RESP_ALARM);
       if (button.isButtonPressed()) {
         lcd.clear();
         led.off();

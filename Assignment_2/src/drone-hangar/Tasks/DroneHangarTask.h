@@ -25,8 +25,14 @@ class DroneHangarTask: public Task {
     UltrasonicTask ultrasonicSensor;
     TempTask tempTask;
 
-public: 
-  DroneHangarTask(LCDTask lcd, BlinkTask led, ButtonTask button, PIRTask pirSensor, ServoTask servoMotor, 
+    String serialBuffer;
+
+    String readSerialCommand();
+    void sendState(const char* state);
+    void handleStatusRequest();
+
+public:
+  DroneHangarTask(LCDTask lcd, BlinkTask led, ButtonTask button, PIRTask pirSensor, ServoTask servoMotor,
     UltrasonicTask ultrasonicSensor, TempTask tempTask);
   void init(int period);
   void tick();
