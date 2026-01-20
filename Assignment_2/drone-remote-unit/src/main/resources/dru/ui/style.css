@@ -1,0 +1,139 @@
+/* Drone Remote Unit Stylesheet */
+
+.root {
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-background-color: #f0f0f0;
+}
+
+/* Header styles */
+.header {
+    -fx-background-color: #2c3e50;
+    -fx-padding: 15px;
+    -fx-alignment: center;
+}
+
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #bdc3c7;
+}
+
+/* Connection panel */
+.connect-button {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 20px;
+}
+
+.connect-button:hover {
+    -fx-background-color: #2ecc71;
+}
+
+.connect-button:disabled {
+    -fx-background-color: #95a5a6;
+}
+
+/* State indicators */
+.state-indicator {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);
+}
+
+.state-label {
+    -fx-font-weight: bold;
+}
+
+/* Command buttons */
+.command-button {
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 3, 0, 0, 2);
+}
+
+.command-button:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+.takeoff-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.takeoff-button:hover:!disabled {
+    -fx-background-color: #5dade2;
+}
+
+.land-button {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: white;
+}
+
+.land-button:hover:!disabled {
+    -fx-background-color: #f39c12;
+}
+
+/* Distance panel */
+.distance-panel {
+    -fx-background-color: #ecf0f1;
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+}
+
+.distance-label {
+    -fx-text-fill: #2c3e50;
+}
+
+.hint-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #7f8c8d;
+}
+
+/* Progress bar for landing distance */
+.progress-bar > .track {
+    -fx-background-color: #ecf0f1;
+    -fx-background-radius: 5px;
+}
+
+.progress-bar > .bar {
+    -fx-background-color: linear-gradient(to right, #e74c3c, #f39c12, #27ae60);
+    -fx-background-radius: 5px;
+}
+
+/* Log area */
+.log-area {
+    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-font-size: 12px;
+    -fx-control-inner-background: #2c3e50;
+    -fx-text-fill: #ecf0f1;
+}
+
+/* Titled panes */
+.titled-pane > .title {
+    -fx-background-color: #34495e;
+    -fx-font-weight: bold;
+}
+
+.titled-pane > .title > .text {
+    -fx-fill: white;
+}
+
+.titled-pane > .content {
+    -fx-background-color: white;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1px;
+}
+
+/* Alert styling for alarm */
+.alert.error .dialog-pane {
+    -fx-background-color: #e74c3c;
+}
+
+.alert.error .dialog-pane .header-panel {
+    -fx-background-color: #c0392b;
+}

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="dru.ui.DroneRemoteController"
+            stylesheets="@style.css">
+
+    <!-- Title Bar -->
+    <top>
+        <VBox styleClass="header">
+            <Label text="Drone Remote Unit" styleClass="title"/>
+            <Label text="Smart Drone Hangar Control" styleClass="subtitle"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" alignment="TOP_CENTER">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+            <!-- Connection Panel -->
+            <TitledPane text="Connection" collapsible="false">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <Label text="Port:"/>
+                    <ComboBox fx:id="portComboBox" prefWidth="120"/>
+                    <Button fx:id="refreshButton" text="Refresh" onAction="#onRefreshPorts"/>
+                    <Button fx:id="connectButton" text="Connect" onAction="#onConnect" styleClass="connect-button"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Circle radius="8" fill="GRAY" fx:id="connectionIndicator"/>
+                    <Label fx:id="connectionStatusLabel" text="Disconnected"/>
+                </HBox>
+            </TitledPane>
+
+            <!-- Status Panel -->
+            <HBox spacing="20" alignment="CENTER">
+                <!-- Drone State -->
+                <TitledPane text="Drone State" collapsible="false" prefWidth="200">
+                    <VBox spacing="10" alignment="CENTER">
+                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                        <Circle fx:id="droneStateIndicator" radius="30" fill="LIGHTGREEN" styleClass="state-indicator"/>
+                        <Label fx:id="droneStateLabel" text="At Rest" styleClass="state-label">
+                            <font><Font size="16" name="System Bold"/></font>
+                        </Label>
+                    </VBox>
+                </TitledPane>
+
+                <!-- Hangar State -->
+                <TitledPane text="Hangar State" collapsible="false" prefWidth="200">
+                    <VBox spacing="10" alignment="CENTER">
+                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                        <Circle fx:id="hangarStateIndicator" radius="30" fill="LIGHTGREEN" styleClass="state-indicator"/>
+                        <Label fx:id="hangarStateLabel" text="Normal" styleClass="state-label">
+                            <font><Font size="16" name="System Bold"/></font>
+                        </Label>
+                    </VBox>
+                </TitledPane>
+            </HBox>
+
+            <!-- Command Buttons -->
+            <TitledPane text="Commands" collapsible="false">
+                <HBox spacing="30" alignment="CENTER">
+                    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                    <Button fx:id="takeoffButton" text="TAKE OFF" onAction="#onTakeoff"
+                            styleClass="command-button, takeoff-button" prefWidth="150" prefHeight="60">
+                        <font><Font size="18" name="System Bold"/></font>
+                    </Button>
+                    <Button fx:id="landButton" text="LAND" onAction="#onLand"
+                            styleClass="command-button, land-button" prefWidth="150" prefHeight="60">
+                        <font><Font size="18" name="System Bold"/></font>
+                    </Button>
+                </HBox>
+            </TitledPane>
+
+            <!-- Landing Distance Panel -->
+            <VBox fx:id="distanceBox" spacing="10" visible="false" styleClass="distance-panel">
+                <TitledPane text="Landing Distance" collapsible="false">
+                    <VBox spacing="10" alignment="CENTER">
+                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                        <Label fx:id="distanceLabel" text="-- cm" styleClass="distance-label">
+                            <font><Font size="32" name="System Bold"/></font>
+                        </Label>
+                        <ProgressBar fx:id="distanceBar" progress="0" prefWidth="300" prefHeight="25"/>
+                        <Label text="Progress bar fills as drone approaches landing" styleClass="hint-label"/>
+                    </VBox>
+                </TitledPane>
+            </VBox>
+
+        </VBox>
+    </center>
+
+    <!-- Log Panel -->
+    <bottom>
+        <TitledPane text="Communication Log" collapsible="true" expanded="true">
+            <TextArea fx:id="logArea" editable="false" prefRowCount="6"
+                      wrapText="true" styleClass="log-area"/>
+        </TitledPane>
+    </bottom>
+
+</BorderPane>
