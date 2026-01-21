@@ -7,7 +7,7 @@
 class ServoTask: public Task {
 
   int pin;
-  enum { AT_0, AT_180 } state;
+  enum { CLOSED, OPEN } state;
   ServoMotor* servo;
 
 public:

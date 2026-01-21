@@ -33,12 +33,12 @@ public class DroneRemoteUnit extends Application {
         Parent root = loader.load();
         controller = loader.getController();
 
-        Scene scene = new Scene(root, 500, 700);
+        Scene scene = new Scene(root, 500, 750);
 
         primaryStage.setTitle("Drone Remote Unit - Smart Drone Hangar");
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(450);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinHeight(650);
         primaryStage.setOnCloseRequest(e -> {
             if (controller != null) {
                 controller.shutdown();

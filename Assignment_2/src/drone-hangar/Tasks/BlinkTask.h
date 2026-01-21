@@ -8,7 +8,7 @@ class BlinkTask: public Task {
 
   int pin;
   Led* led;
-  enum { ON, OFF} state;
+  enum { ON, OFF, BLINK_ON, BLINK_OFF } state;
 
 public:
 
@@ -17,6 +17,7 @@ public:
   void tick();
   void on();
   void off();
+  void blink();
 };
 
 #endif

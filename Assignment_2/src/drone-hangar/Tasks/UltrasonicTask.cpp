@@ -1,8 +1,10 @@
 #include "UltrasonicTask.h"
 #include "Arduino.h"
 
+float distance = 0;   
+
 UltrasonicTask::UltrasonicTask(int trigPin, int echoPin){
-  this->sensor = new UltrasonicSensor(trigPin, echoPin);    
+  this->sensor = new UltrasonicSensor(trigPin, echoPin); 
 }
   
 void UltrasonicTask::init(int period){
@@ -10,12 +12,12 @@ void UltrasonicTask::init(int period){
 }
   
 void UltrasonicTask::tick(){
-  float distance = sensor->getDistance();
+  distance = sensor->getDistance();
   Serial.print("Distance: ");
   Serial.print(distance);
   Serial.println(" cm");
 }
 
 int UltrasonicTask::getDistance() {
-    return sensor->getDistance();
+    return distance;
 }

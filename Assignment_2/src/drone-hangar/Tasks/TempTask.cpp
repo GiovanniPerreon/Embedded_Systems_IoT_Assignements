@@ -2,70 +2,73 @@
 #include "../Devices/TempSensorLM35.h"
 #include "Arduino.h"
 
-TempTask::TempTask(int pin, ButtonTask button, ServoTask servo, BlinkTask led, LCDTask lcd) : button(button), servo(servo), led(led), lcd(lcd) {
-  this->sensor = new TempSensorLM35(pin);    
+TempTask::TempTask(int pin, ButtonTask* button, ServoTask* servo, BlinkTask* led, LCDTask* lcd) 
+  : button(button), servo(servo), led(led), lcd(lcd) {
+  this->sensor = new TempSensorLM35(pin);
+  highTempStartTime = 0;
+  veryHighTempStartTime = 0;
 }
   
 void TempTask::init(int period){
   Task::init(period);
+  state = NORMAL;
 }
 
 bool TempTask::isInAlarm() {
-  return state == ALARM;
+  return state == ALARM || state == VERYHIGHTEMP;
 }
 
 bool TempTask::isInPreAlarm() {
-  return state == PREALARM || state == ALARM;
+  return state == PREALARM || state == ALARM || state == HIGHTEMP || state == VERYHIGHTEMP;
 }
   
 void TempTask::tick(){
   float temperature = sensor->getTemperature();
-  
+  Serial.print("TEMP: ");
+  Serial.print(temperature);
+  Serial.println(" Celsius");
   switch(state){
     case NORMAL:
-      if(temperature >= TEMP1){
+      if(temperature >= Temp1){
+        highTempStartTime = millis();
         state = HIGHTEMP;
       }
       break;
-    case HIGHTEMP: {
-      long checkStartT3 = getCurrentTimeInState();
-      while (getCurrentTimeInState() - checkStartT3 < T3) {
-        temperature = sensor->getTemperature();
-        if (temperature < TEMP1) {
-          state = NORMAL;
-        }
+      
+    case HIGHTEMP:
+      if (temperature < Temp1) {
+        state = NORMAL;
+      } else if (millis() - highTempStartTime >= T3) {
+        state = PREALARM;
       }
-      state = PREALARM;
       break;
-    }
     case PREALARM:
       //disable new take offs and landings
-      if(temperature >= TEMP2){
+      if(temperature >= Temp2){
+        veryHighTempStartTime = millis();
         state = VERYHIGHTEMP;
-      } else if(temperature < TEMP1){
+      } else if(temperature < Temp1){
         state = NORMAL;
       }
       break;
-    case VERYHIGHTEMP: {
-      long checkStartT4 = getCurrentTimeInState();
-      while (getCurrentTimeInState() - checkStartT4 < T4) {
-        temperature = sensor->getTemperature();
-        if (temperature < TEMP2) {
-          state = PREALARM;
-        }
+      
+    case VERYHIGHTEMP:
+      if (temperature < Temp2) {
+        state = PREALARM;
+      } else if (millis() - veryHighTempStartTime >= T4) {
+        state = ALARM;
       }
-      state = ALARM;
       break;
-    }
     case ALARM:
       //disable all operations
-      servo.close();
-      led.on();
-      lcd.printLCD("ALARM", 0, 0);
+      servo->close();
+      led->on();
+      lcd->clear();
+      lcd->printLCD("ALARM", 0, 0);
       Serial.println(RESP_ALARM);
-      if (button.isButtonPressed()) {
-        lcd.clear();
-        led.off();
+      if (button->isButtonPressed()) {
+        lcd->clear();
+        led->off();
         state = NORMAL;
       }
       break;

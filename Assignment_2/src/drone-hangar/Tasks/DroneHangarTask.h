@@ -16,24 +16,30 @@
 class DroneHangarTask: public Task {
 
     enum { DRONE_INSIDE, TAKE_OFF, TAKE_OFF_CHECK, DRONE_OUT, DETECT, LANDING, LANDING_CHECK} state;
+    int lastState;
 
-    LCDTask lcd;
-    BlinkTask led;
-    ButtonTask button;
-    PIRTask pirSensor;
-    ServoTask servoMotor;
-    UltrasonicTask ultrasonicSensor;
-    TempTask tempTask;
+    LCDTask* lcd;
+    BlinkTask* led1;
+    BlinkTask* led2;
+    BlinkTask* led3;
+    ButtonTask* button;
+    PIRTask* pirSensor;
+    ServoTask* servoMotor;
+    UltrasonicTask* ultrasonicSensor;
+    TempTask* tempTask;
 
     String serialBuffer;
+    unsigned long takeoffCheckStartTime;
+    unsigned long landingCheckStartTime;
 
     String readSerialCommand();
     void sendState(const char* state);
     void handleStatusRequest();
+    bool justEnteredState(int newState); // Helper to detect state entry
 
 public:
-  DroneHangarTask(LCDTask lcd, BlinkTask led, ButtonTask button, PIRTask pirSensor, ServoTask servoMotor,
-    UltrasonicTask ultrasonicSensor, TempTask tempTask);
+  DroneHangarTask(LCDTask* lcd, BlinkTask* led1, BlinkTask* led2, BlinkTask* led3, ButtonTask* button, PIRTask* pirSensor, ServoTask* servoMotor,
+    UltrasonicTask* ultrasonicSensor, TempTask* tempTask);
   void init(int period);
   void tick();
 };

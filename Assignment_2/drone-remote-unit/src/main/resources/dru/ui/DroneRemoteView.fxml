@@ -20,8 +20,10 @@
     </top>
 
     <center>
-        <VBox spacing="20" alignment="TOP_CENTER">
-            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        <ScrollPane fitToWidth="true" fitToHeight="true" pannable="true" vbarPolicy="AS_NEEDED" hbarPolicy="AS_NEEDED">
+            <content>
+                <VBox spacing="20" alignment="TOP_CENTER">
+                    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
             <!-- Connection Panel -->
             <TitledPane text="Connection" collapsible="false">
@@ -38,68 +40,83 @@
             </TitledPane>
 
             <!-- Status Panel -->
-            <HBox spacing="20" alignment="CENTER">
+            <HBox spacing="20" alignment="CENTER" fillHeight="false">
                 <!-- Drone State -->
-                <TitledPane text="Drone State" collapsible="false" prefWidth="200">
-                    <VBox spacing="10" alignment="CENTER">
+                <TitledPane text="Drone State" collapsible="false" 
+                            minWidth="200" prefWidth="200" maxWidth="200"
+                            minHeight="150" prefHeight="150" maxHeight="150"
+                            HBox.hgrow="NEVER">
+                    <VBox spacing="10" alignment="CENTER" 
+                          minHeight="120" prefHeight="120" maxHeight="120">
                         <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
-                        <Circle fx:id="droneStateIndicator" radius="30" fill="LIGHTGREEN" styleClass="state-indicator"/>
-                        <Label fx:id="droneStateLabel" text="At Rest" styleClass="state-label">
+                        <Circle fx:id="droneStateIndicator" radius="30" fill="LIGHTGREEN" 
+                                styleClass="state-indicator"/>
+                        <Label fx:id="droneStateLabel" text="At Rest" styleClass="state-label"
+                               minHeight="20" prefHeight="20">
                             <font><Font size="16" name="System Bold"/></font>
                         </Label>
                     </VBox>
                 </TitledPane>
 
                 <!-- Hangar State -->
-                <TitledPane text="Hangar State" collapsible="false" prefWidth="200">
-                    <VBox spacing="10" alignment="CENTER">
+                <TitledPane text="Hangar State" collapsible="false" 
+                            minWidth="200" prefWidth="200" maxWidth="200"
+                            minHeight="150" prefHeight="150" maxHeight="150"
+                            HBox.hgrow="NEVER">
+                    <VBox spacing="10" alignment="CENTER" 
+                          minHeight="120" prefHeight="120" maxHeight="120">
                         <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
-                        <Circle fx:id="hangarStateIndicator" radius="30" fill="LIGHTGREEN" styleClass="state-indicator"/>
-                        <Label fx:id="hangarStateLabel" text="Normal" styleClass="state-label">
+                        <Circle fx:id="hangarStateIndicator" radius="30" fill="LIGHTGREEN" 
+                                styleClass="state-indicator"/>
+                        <Label fx:id="hangarStateLabel" text="Normal" styleClass="state-label"
+                               minHeight="20" prefHeight="20">
                             <font><Font size="16" name="System Bold"/></font>
                         </Label>
                     </VBox>
                 </TitledPane>
+
             </HBox>
 
             <!-- Command Buttons -->
             <TitledPane text="Commands" collapsible="false">
-                <HBox spacing="30" alignment="CENTER">
+                <HBox spacing="30" alignment="CENTER" fillHeight="false">
                     <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
                     <Button fx:id="takeoffButton" text="TAKE OFF" onAction="#onTakeoff"
-                            styleClass="command-button, takeoff-button" prefWidth="150" prefHeight="60">
-                        <font><Font size="18" name="System Bold"/></font>
-                    </Button>
+                            styleClass="command-button, takeoff-button" 
+                            minWidth="150" prefWidth="150" maxWidth="150"
+                            minHeight="60" prefHeight="60" maxHeight="60"/>
                     <Button fx:id="landButton" text="LAND" onAction="#onLand"
-                            styleClass="command-button, land-button" prefWidth="150" prefHeight="60">
-                        <font><Font size="18" name="System Bold"/></font>
-                    </Button>
+                            styleClass="command-button, land-button" 
+                            minWidth="150" prefWidth="150" maxWidth="150"
+                            minHeight="60" prefHeight="60" maxHeight="60"/>
                 </HBox>
             </TitledPane>
 
+            <!-- Communication Log -->
+            <TitledPane text="Communication Log" collapsible="true" expanded="false" VBox.vgrow="SOMETIMES">
+                <TextArea fx:id="logArea" editable="false" 
+                          minHeight="200" prefHeight="250"
+                          wrapText="true" styleClass="log-area"/>
+            </TitledPane>
+
+            <!-- Bottom spacer to prevent log from taking all space -->
+
             <!-- Landing Distance Panel -->
-            <VBox fx:id="distanceBox" spacing="10" visible="false" styleClass="distance-panel">
-                <TitledPane text="Landing Distance" collapsible="false">
-                    <VBox spacing="10" alignment="CENTER">
+            <VBox fx:id="distanceBox" spacing="10" visible="false" styleClass="distance-panel" VBox.vgrow="ALWAYS">
+                <TitledPane text="Landing Distance" collapsible="false" VBox.vgrow="ALWAYS">
+                    <VBox spacing="10" alignment="CENTER" VBox.vgrow="ALWAYS">
                         <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
                         <Label fx:id="distanceLabel" text="-- cm" styleClass="distance-label">
                             <font><Font size="32" name="System Bold"/></font>
                         </Label>
-                        <ProgressBar fx:id="distanceBar" progress="0" prefWidth="300" prefHeight="25"/>
+                        <ProgressBar fx:id="distanceBar" progress="0" maxWidth="Infinity" prefHeight="25" VBox.vgrow="NEVER"/>
                         <Label text="Progress bar fills as drone approaches landing" styleClass="hint-label"/>
                     </VBox>
                 </TitledPane>
             </VBox>
-
-        </VBox>
+            </VBox>
+        </content>
+        </ScrollPane>
     </center>
-
-    <!-- Log Panel -->
-    <bottom>
-        <TitledPane text="Communication Log" collapsible="true" expanded="true">
-            <TextArea fx:id="logArea" editable="false" prefRowCount="6"
-                      wrapText="true" styleClass="log-area"/>
-        </TitledPane>
-    </bottom>
 
 </BorderPane>

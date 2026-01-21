@@ -62,12 +62,14 @@ public class DroneRemoteController {
             model.connectedProperty().not()
                 .or(model.droneStateProperty().isNotEqualTo(DroneState.DRONE_REST))
                 .or(model.hangarStateProperty().isEqualTo(HangarState.ALARM))
+                .or(model.hangarStateProperty().isEqualTo(HangarState.PREALARM))
         );
 
         landButton.disableProperty().bind(
             model.connectedProperty().not()
                 .or(model.droneStateProperty().isNotEqualTo(DroneState.DRONE_OPERATING))
                 .or(model.hangarStateProperty().isEqualTo(HangarState.ALARM))
+                .or(model.hangarStateProperty().isEqualTo(HangarState.PREALARM))
         );
 
         // Distance display visibility

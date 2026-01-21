@@ -70,13 +70,11 @@ public class DroneRemoteModel {
         switch (message) {
             case SerialProtocol.RESP_INSIDE:
                 droneState.set(DroneState.DRONE_REST);
-                hangarState.set(HangarState.NORMAL);
                 landingDistance.set(-1);
                 break;
 
             case SerialProtocol.RESP_OUTSIDE:
                 droneState.set(DroneState.DRONE_OPERATING);
-                hangarState.set(HangarState.NORMAL);
                 landingDistance.set(-1);
                 break;
 
@@ -88,13 +86,20 @@ public class DroneRemoteModel {
                 droneState.set(DroneState.DRONE_LANDING);
                 break;
 
+            case SerialProtocol.RESP_NORMAL:
+                hangarState.set(HangarState.NORMAL);
+                break;
+
+            case SerialProtocol.RESP_PREALARM:
+                hangarState.set(HangarState.PREALARM);
+                break;
+
             case SerialProtocol.RESP_ALARM:
                 droneState.set(DroneState.ALARM);
                 hangarState.set(HangarState.ALARM);
                 break;
 
             default:
-                // Unknown message, could log for debugging
                 break;
         }
     }

@@ -15,14 +15,17 @@ class TempTask: public Task {
   enum { NORMAL, HIGHTEMP, PREALARM, VERYHIGHTEMP, ALARM} state;
 
   TempSensor* sensor;
-  ButtonTask button;
-  ServoTask servo;
-  BlinkTask led;
-  LCDTask lcd;
+  ButtonTask* button;
+  ServoTask* servo;
+  BlinkTask* led;
+  LCDTask* lcd;
+  
+  unsigned long highTempStartTime;
+  unsigned long veryHighTempStartTime;
 
 public:
 
-  TempTask(int pin, ButtonTask button, ServoTask servo, BlinkTask led, LCDTask lcd);  
+  TempTask(int pin, ButtonTask* button, ServoTask* servo, BlinkTask* led, LCDTask* lcd);  
   void init(int period);  
   void tick();
   bool isInAlarm();

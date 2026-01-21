@@ -46,10 +46,12 @@
 
 .state-label {
     -fx-font-weight: bold;
+    -fx-font-size: 16px;
 }
 
 /* Command buttons */
 .command-button {
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-cursor: hand;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 3, 0, 0, 2);

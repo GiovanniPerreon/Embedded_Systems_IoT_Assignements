@@ -40,7 +40,9 @@ public final class SerialProtocol {
     public static final String RESP_OUTSIDE = "OUTSIDE";
     public static final String RESP_TAKEOFF = "TAKEOFF";
     public static final String RESP_LANDING = "LANDING";
+    public static final String RESP_NORMAL = "NORMAL";
     public static final String RESP_ALARM = "ALARM";
+    public static final String RESP_PREALARM = "PREALARM";
     public static final String RESP_DIST_PREFIX = "DIST:";
 
     // Timeouts
