@@ -17,8 +17,8 @@
 #define T2 3000
 #define T3 3000
 #define T4 3000
-#define Temp1 16.0
-#define Temp2 17.0
+#define Temp1 20.0
+#define Temp2 21.0
 // Serial protocol commands (PC -> Arduino)
 #define CMD_TAKEOFF "TAKEOFF"
 #define CMD_LAND "LAND"

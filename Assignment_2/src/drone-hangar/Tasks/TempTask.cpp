@@ -15,11 +15,11 @@ void TempTask::init(int period){
 }
 
 bool TempTask::isInAlarm() {
-  return state == ALARM || state == VERYHIGHTEMP;
+  return state == ALARM;
 }
 
 bool TempTask::isInPreAlarm() {
-  return state == PREALARM || state == ALARM || state == HIGHTEMP || state == VERYHIGHTEMP;
+  return state == PREALARM || state == ALARM;
 }
   
 void TempTask::tick(){
