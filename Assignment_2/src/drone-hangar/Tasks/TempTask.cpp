@@ -1,3 +1,4 @@
+
 #include "TempTask.h"
 #include "../Devices/TempSensorLM35.h"
 #include "Arduino.h"
@@ -21,7 +22,11 @@ bool TempTask::isInAlarm() {
 bool TempTask::isInPreAlarm() {
   return state == PREALARM || state == ALARM;
 }
-  
+
+bool TempTask::isHighTemp() {
+  return state == HIGHTEMP || state == VERYHIGHTEMP;
+}
+
 void TempTask::tick(){
   float temperature = sensor->getTemperature();
   Serial.print("TEMP: ");

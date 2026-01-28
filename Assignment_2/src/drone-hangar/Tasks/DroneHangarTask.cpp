@@ -77,7 +77,7 @@ void DroneHangarTask::tick(){
   }
   if (tempTask->isInPreAlarm() && !tempTask->isInAlarm()) {
     sendState(RESP_PREALARM);
-  } else if (!tempTask->isInPreAlarm() && !tempTask->isInAlarm()) {
+  } else if (!tempTask->isInPreAlarm() && !tempTask->isInAlarm() && !tempTask->isHighTemp()) {
     sendState(RESP_NORMAL);
   }
   if (!tempTask->isInAlarm()) {

@@ -28,6 +28,7 @@ public:
   TempTask(int pin, ButtonTask* button, ServoTask* servo, BlinkTask* led, LCDTask* lcd);  
   void init(int period);  
   void tick();
+  bool isHighTemp();
   bool isInAlarm();
   bool isInPreAlarm();
 };
