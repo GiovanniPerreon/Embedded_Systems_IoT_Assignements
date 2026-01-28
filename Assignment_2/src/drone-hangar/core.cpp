@@ -25,13 +25,13 @@ void initState(){
     logMsg("Initializing tasks...");
     
     Task* tL1 = new BlinkTask(L1);
-    tL1->init(200);
+    tL1->init(500);
 
     Task* tL2 = new BlinkTask(L2);
-    tL2->init(200);
+    tL2->init(500);
 
     Task* tL3 = new BlinkTask(L3);
-    tL3->init(200);
+    tL3->init(500);
 
     Task* t1 = new ButtonTask(buttonPIN);
     t1->init(50);
