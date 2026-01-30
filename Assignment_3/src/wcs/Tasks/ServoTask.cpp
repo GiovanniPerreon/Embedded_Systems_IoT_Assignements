@@ -1,28 +1,33 @@
 #include "ServoTask.h"
-#include <Arduino.h>
+#include "Arduino.h"
 
-ServoTask::ServoTask(int servoPin, int potPin) : servoPin(servoPin), potPin(potPin), positionPercent(0), manualMode(false) {}
-
-void ServoTask::init(int period) {
-  servo.attach(servoPin);
+ServoTask::ServoTask(int pin){
+  this->pin = pin;    
 }
-
-void ServoTask::tick() {
-  if (manualMode) {
-    int potValue = analogRead(potPin);
-    positionPercent = map(potValue, 0, 1023, 0, 100);
-    int angle = map(positionPercent, 0, 100, 0, 90);
-    servo.write(angle);
+  
+void ServoTask::init(int period){
+  Task::init(period);
+  servo = new ServoMotor(pin);
+  servo->on();
+  state = CLOSED;
+  servo->setPosition(0);
+}
+  
+void ServoTask::tick(){
+  switch(state) {
+    case CLOSED:
+      servo->setPosition(0);
+      break;
+    case OPEN:
+      servo->setPosition(180);
+      break;
   }
 }
 
-void ServoTask::setPositionPercent(int percent) {
-  manualMode = false;
-  positionPercent = constrain(percent, 0, 100);
-  int angle = map(positionPercent, 0, 100, 0, 90);
-  servo.write(angle);
+void ServoTask::open(){
+  state = OPEN;
 }
 
-int ServoTask::getPositionPercent() {
-  return positionPercent;
+void ServoTask::close(){
+  state = CLOSED;
 }

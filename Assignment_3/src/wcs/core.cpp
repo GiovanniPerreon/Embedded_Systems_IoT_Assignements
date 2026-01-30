@@ -1,4 +1,5 @@
 #include "core.h"
+#include "config.h"
 #include "Arduino.h"
 #include "Kernel/kernel.h"
 #include "Kernel/Scheduler.h"
@@ -18,7 +19,7 @@ void initState(){
     // Initialize tasks for WCS
     Task* buttonTask = new ButtonTask(BUTTON_PIN);
     buttonTask->init(50);
-    Task* servoTask = new ServoTask(SERVO_PIN, POT_PIN);
+    Task* servoTask = new ServoTask(SERVO_PIN);
     servoTask->init(100);
     Task* lcdTask = new LCDTask(LCD_ADDR, LCD_COLS, LCD_ROWS);
     lcdTask->init(200);

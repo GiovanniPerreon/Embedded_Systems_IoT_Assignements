@@ -1,17 +1,21 @@
 #ifndef __BUTTONTASK__
 #define __BUTTONTASK__
-#include "Task.h"
 
-class ButtonTask : public Task {
-public:
-  ButtonTask(int pin);
-  void init(int period) override;
-  void tick() override;
-  bool isPressed();
-private:
+#include "Task.h"
+#include "../Devices/Button.h"
+
+class ButtonTask: public Task {
+
   int pin;
-  bool lastState;
-  bool pressed;
+  enum { PRESSED, NOT_PRESSED} state;
+  Button* button;
+
+public:
+
+  ButtonTask(int pin);  
+  void init(int period);  
+  void tick();
+  bool isButtonPressed();
 };
 
 #endif

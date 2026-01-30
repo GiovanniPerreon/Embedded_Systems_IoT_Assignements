@@ -1,21 +1,22 @@
 #ifndef __SERVOTASK__
 #define __SERVOTASK__
-#include "Task.h"
-#include <Servo.h>
 
-class ServoTask : public Task {
+#include "Task.h"
+#include "../Devices/ServoMotor.h"
+
+class ServoTask: public Task {
+
+  int pin;
+  enum { CLOSED, OPEN } state;
+  ServoMotor* servo;
+
 public:
-  ServoTask(int servoPin, int potPin);
-  void init(int period) override;
-  void tick() override;
-  void setPositionPercent(int percent);
-  int getPositionPercent();
-private:
-  int servoPin;
-  int potPin;
-  Servo servo;
-  int positionPercent;
-  bool manualMode;
+
+  ServoTask(int pin);  
+  void init(int period);  
+  void tick();
+  void open();
+  void close();
 };
 
 #endif

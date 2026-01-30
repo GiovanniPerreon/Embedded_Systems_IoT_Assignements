@@ -1,22 +1,26 @@
 #include "ButtonTask.h"
-#include <Arduino.h>
+#include "Arduino.h"
 
-ButtonTask::ButtonTask(int pin) : pin(pin), lastState(false), pressed(false) {}
-
-void ButtonTask::init(int period) {
-  pinMode(pin, INPUT_PULLUP);
+ButtonTask::ButtonTask(int pin){
+  this->pin = pin;    
 }
-
-void ButtonTask::tick() {
-  bool state = digitalRead(pin) == LOW;
-  if (state && !lastState) {
-    pressed = true;
-  } else {
-    pressed = false;
+  
+void ButtonTask::init(int period){
+  Task::init(period);
+  button = new Button(pin);
+  state = NOT_PRESSED;   
+}
+  
+void ButtonTask::tick(){
+  if(button->isPressed() && state == NOT_PRESSED) {
+    Serial.println("Button is pressed");
+    state = PRESSED;
+  } else if (!button->isPressed() && state == PRESSED){
+    Serial.println("Button is not pressed");
+    state = NOT_PRESSED;
   }
-  lastState = state;
 }
 
-bool ButtonTask::isPressed() {
-  return pressed;
+bool ButtonTask::isButtonPressed(){
+  return state == PRESSED;
 }
