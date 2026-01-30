@@ -8,9 +8,6 @@ ServoMotor::ServoMotor(int pin){
   pinMode(pin, OUTPUT);
 } 
 
-int ServoMotor::getAngle() {
-  return angle;
-}
 void ServoMotor::on(){
   _on = true;
 }

@@ -5,18 +5,15 @@
 #include "../Devices/ServoMotor.h"
 
 class ServoTask: public Task {
-
   int pin;
-  enum { CLOSED, OPEN } state;
   ServoMotor* servo;
-
+  int targetAngle = 0;
 public:
-
   ServoTask(int pin);  
   void init(int period);  
   void tick();
-  void open();
-  void close();
+  void setAngle(int angle); // Set servo to any angle
+  int getAngle(); // Get current target angle
 };
 
 #endif

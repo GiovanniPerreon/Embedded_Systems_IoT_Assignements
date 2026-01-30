@@ -1,14 +1,13 @@
 #ifndef __CONFIG__
 #define __CONFIG__
 
-#define SERVO_PIN 9
-#ifndef POT_PIN
-#define POT_PIN A0 // Analog pin for potentiometer (adjust as needed)
-#endif
 #define BUTTON_PIN 2
+#define SERVO_PIN 9
+#define POT_PIN A0
 #define LCD_ADDR 0x27
 #define LCD_COLS 16
 #define LCD_ROWS 2
+
 #define GREEN_LED_PIN 6
 #define RED_LED_PIN 7
 

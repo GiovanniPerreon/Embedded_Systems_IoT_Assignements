@@ -8,7 +8,6 @@ class ServoMotor {
 public:
   ServoMotor(int pin);
 
-  int getAngle();
   void on();
   bool isOn();
   void setPosition(int angle);

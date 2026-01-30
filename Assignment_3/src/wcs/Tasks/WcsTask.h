@@ -3,9 +3,9 @@
 
 #include "Task.h"
 #include "../config.h"
-#include "Tasks/LCDTask.h"
-#include "Tasks/ServoTask.h"
-#include "Tasks/ButtonTask.h"
+#include "LCDTask.h"
+#include "ServoTask.h"
+#include "ButtonTask.h"
 #include <Arduino.h>
 
 class WcsTask : public Task {

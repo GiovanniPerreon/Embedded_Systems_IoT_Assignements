@@ -3,31 +3,27 @@
 
 ServoTask::ServoTask(int pin){
   this->pin = pin;    
+  targetAngle = 0;
 }
-  
+
 void ServoTask::init(int period){
   Task::init(period);
   servo = new ServoMotor(pin);
   servo->on();
-  state = CLOSED;
-  servo->setPosition(0);
+  targetAngle = 0;
+  servo->setPosition(targetAngle);
 }
-  
+
 void ServoTask::tick(){
-  switch(state) {
-    case CLOSED:
-      servo->setPosition(0);
-      break;
-    case OPEN:
-      servo->setPosition(180);
-      break;
-  }
+  servo->setPosition(targetAngle);
 }
 
-void ServoTask::open(){
-  state = OPEN;
+void ServoTask::setAngle(int angle) {
+  if (angle < 0) angle = 0;
+  if (angle > 180) angle = 180;
+  targetAngle = angle;
 }
 
-void ServoTask::close(){
-  state = CLOSED;
+int ServoTask::getAngle() {
+  return targetAngle;
 }

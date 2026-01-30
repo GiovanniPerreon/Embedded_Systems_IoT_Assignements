@@ -13,7 +13,7 @@ public:
   LCDTask(int address, int cols, int rows);  
   void init(int period);  
   void tick();
-  void printLCD(const char* text, int col, int row);
+  void printLCD(String text, int col, int row);
   void clear();
 };
 

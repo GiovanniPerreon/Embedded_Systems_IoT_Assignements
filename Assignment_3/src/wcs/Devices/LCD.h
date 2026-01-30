@@ -14,7 +14,7 @@ public:
   void init();
   void clear();
   void setCursor(int col, int row);
-  void print(const char* text);
+  void print(String text);
   void print(int value);
   void print(float value);
 };

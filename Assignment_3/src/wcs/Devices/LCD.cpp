@@ -20,7 +20,7 @@ void LCD::setCursor(int col, int row){
   lcd->setCursor(col, row);
 }
 
-void LCD::print(const char* text){
+void LCD::print(String text){
   lcd->print(text);
 }
 

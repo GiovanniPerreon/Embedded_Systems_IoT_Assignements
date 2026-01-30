@@ -1,7 +1,7 @@
 #include "WcsTask.h"
 
 WcsTask::WcsTask(LCDTask* lcd, ServoTask* servo, ButtonTask* button, int potPin)
-    : lcd(lcd), servo(servo), button(button), potPin(potPin), state(UNCONNECTED), lastState(-1), valveLevel(0) {}
+    : state(UNCONNECTED), lastState(-1), lcd(lcd), servo(servo), button(button), potPin(potPin), valveLevel(0) {}
 
 void WcsTask::init(int period) {
     Task::init(period);
@@ -21,7 +21,8 @@ bool WcsTask::justEnteredState(State newState) {
 
 void WcsTask::updateLcd() {
     lcd->clear();
-    lcd->printLCD("Valve: " + String(valveLevel) + "%", 0, 0);
+    String valveStr = "Valve: " + String(valveLevel) + "%";
+    lcd->printLCD(valveStr, 0, 0);
     lcd->printLCD(modeStr, 1, 0);
 }
 
@@ -30,7 +31,7 @@ void WcsTask::setValveLevel(int percent) {
     if (percent > 100) percent = 100;
     valveLevel = percent;
     int angle = map(percent, 0, 100, 0, 90);
-    servo->setPosition(angle);
+    servo->setAngle(angle);
 }
 
 int WcsTask::readPotPercent() {
@@ -47,7 +48,7 @@ void WcsTask::setUnconnected() {
 
 void WcsTask::tick() {
     // Button toggles MANUAL/AUTOMATIC
-    if (button->isPressed()) {
+    if (button->isButtonPressed()) {
         if (state == MANUAL) {
             state = AUTOMATIC;
             modeStr = "AUTOMATIC";

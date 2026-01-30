@@ -14,7 +14,7 @@ void LCDTask::tick(){
 
 }
 
-void LCDTask::printLCD(const char* text, int col, int row){
+void LCDTask::printLCD(String text, int col, int row){
   lcd->setCursor(col, row);
   lcd->print(text);
 }
