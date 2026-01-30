@@ -10,7 +10,7 @@ We want to realise an IoT system monitoring the rainwater level of a tank.  The 
 
 ### Description 
 
-#### Components
+#### Components-+
 
 The system is composed by four subsystems:
 

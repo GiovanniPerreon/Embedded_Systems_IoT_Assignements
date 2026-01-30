@@ -1,22 +1,22 @@
-#ifndef __KERNEL__
-#define __KERNEL__
+    #ifndef __KERNEL__
+    #define __KERNEL__
 
-#include "Arduino.h" 
+    #include "Arduino.h" 
 
-#define DEBUG
+    #define DEBUG
 
-/* general state management procedure */
+    /* general state management procedure */
 
-void initKernel();
-void updateStateTime();
-void changeState(int new_state);
+    void initKernel();
+    void updateStateTime();
+    void changeState(int new_state);
 
-int getCurrentState();
-long getCurrentTimeInState();
-long getEnteredStateTime();
-bool isJustEnteredInState();
+    int getCurrentState();
+    long getCurrentTimeInState();
+    long getEnteredStateTime();
+    bool isJustEnteredInState();
 
-/* for debugging */
-void logMsg(const String& msg);
- 
-#endif
+    /* for debugging */
+    void logMsg(const String& msg);
+    
+    #endif
