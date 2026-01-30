@@ -55,7 +55,7 @@ The system is meant to monitor the rainwater level inside the tank, and - depend
   - The rainwater level are sampled at frequency F and sent to the **CUS** subsystem.
   - When the system is working correctly (network ok, sending data ok)  the green led is on and the red is off; otherwise – in the case of network problems – the red led should be on and the green led off.
 - The **WCS** subsystem is responsible for controlling a valve (with a motor) opening/closing a water channel draining water from the tank to the water channel network.
-  - The opening range is in percentage: from 0% = channel closed (motor position 0 degree), up to 100% = channel full open (motor position 90° degree).
+  - Th eopening range is in percentage: from 0% = channel closed (motor position 0 degree), up to 100% = channel full open (motor position 90° degree).
   - The water channel opening level depends on the state of the system, established by the **CUS** subsystem (see later). 
   - The **WCS** includes a button to enable the `MANUAL` mode, in particular:
     - When the button is pressed, the system enters in `MANUAL` mode, so that the water channel opening level can be manually controlled by operators using a potentiometer. 

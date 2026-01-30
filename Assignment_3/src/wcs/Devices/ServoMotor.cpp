@@ -3,10 +3,14 @@
 
 ServoMotor::ServoMotor(int pin){
   this->pin = pin;  
+  angle = 0;
   _on = false;
   pinMode(pin, OUTPUT);
 } 
 
+int ServoMotor::getAngle() {
+  return angle;
+}
 void ServoMotor::on(){
   _on = true;
 }
@@ -15,7 +19,8 @@ bool ServoMotor::isOn(){
   return _on;
 }
 
-void ServoMotor::setPosition(int angle){
+void ServoMotor::setPosition(int newAngle){
+  angle = newAngle;
   if (angle > 180){
     angle = 180;
   } else if (angle < 0){
