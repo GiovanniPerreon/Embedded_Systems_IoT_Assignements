@@ -61,12 +61,19 @@ public class HttpServer {
 
         // POST /api/mode
         app.post("/api/mode", ctx -> {
-            JsonObject body = gson.fromJson(ctx.body(), JsonObject.class);
-            String modeStr = body.get("mode").getAsString().toUpperCase();
-
             JsonObject response = new JsonObject();
 
             try {
+                JsonObject body = gson.fromJson(ctx.body(), JsonObject.class);
+                if (body == null || !body.has("mode")) {
+                    ctx.status(400);
+                    response.addProperty("error", "Missing required field: mode");
+                    ctx.contentType("application/json");
+                    ctx.result(gson.toJson(response));
+                    return;
+                }
+
+                String modeStr = body.get("mode").getAsString().toUpperCase();
                 SystemMode requestedMode = SystemMode.valueOf(modeStr);
 
                 if (requestedMode == SystemMode.UNCONNECTED) {
@@ -92,7 +99,12 @@ public class HttpServer {
 
             } catch (IllegalArgumentException e) {
                 ctx.status(400);
-                response.addProperty("error", "Invalid mode: " + modeStr);
+                response.addProperty("error", "Invalid mode value");
+                ctx.contentType("application/json");
+                ctx.result(gson.toJson(response));
+            } catch (Exception e) {
+                ctx.status(400);
+                response.addProperty("error", "Invalid request body");
                 ctx.contentType("application/json");
                 ctx.result(gson.toJson(response));
             }
@@ -102,33 +114,49 @@ public class HttpServer {
         app.post("/api/valve", ctx -> {
             JsonObject response = new JsonObject();
 
-            if (state.getMode() != SystemMode.MANUAL) {
-                ctx.status(400);
-                response.addProperty("error",
-                    "Valve can only be set in MANUAL mode. Current: " + state.getMode().getLabel());
+            try {
+                if (state.getMode() != SystemMode.MANUAL) {
+                    ctx.status(400);
+                    response.addProperty("error",
+                        "Valve can only be set in MANUAL mode. Current: " + state.getMode().getLabel());
+                    ctx.contentType("application/json");
+                    ctx.result(gson.toJson(response));
+                    return;
+                }
+
+                JsonObject body = gson.fromJson(ctx.body(), JsonObject.class);
+                if (body == null || !body.has("percent")) {
+                    ctx.status(400);
+                    response.addProperty("error", "Missing required field: percent");
+                    ctx.contentType("application/json");
+                    ctx.result(gson.toJson(response));
+                    return;
+                }
+
+                int percent = body.get("percent").getAsInt();
+
+                if (percent < 0 || percent > 100) {
+                    ctx.status(400);
+                    response.addProperty("error", "Percent must be 0-100. Got: " + percent);
+                    ctx.contentType("application/json");
+                    ctx.result(gson.toJson(response));
+                    return;
+                }
+
+                state.setValveOpenPercent(percent);
+                serial.sendValveOpen(percent);
+
+                response.addProperty("success", true);
+                response.addProperty("valveOpenPercent", percent);
                 ctx.contentType("application/json");
                 ctx.result(gson.toJson(response));
-                return;
-            }
 
-            JsonObject body = gson.fromJson(ctx.body(), JsonObject.class);
-            int percent = body.get("percent").getAsInt();
-
-            if (percent < 0 || percent > 100) {
+            } catch (Exception e) {
                 ctx.status(400);
-                response.addProperty("error", "Percent must be 0-100. Got: " + percent);
+                response.addProperty("error", "Invalid request body");
                 ctx.contentType("application/json");
                 ctx.result(gson.toJson(response));
-                return;
             }
-
-            state.setValveOpenPercent(percent);
-            serial.sendValveOpen(percent);
-
-            response.addProperty("success", true);
-            response.addProperty("valveOpenPercent", percent);
-            ctx.contentType("application/json");
-            ctx.result(gson.toJson(response));
         });
     }
 
