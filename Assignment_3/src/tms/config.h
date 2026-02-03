@@ -5,10 +5,10 @@
 #define SONAR_ECHO_PIN  18
 #define GREEN_LED_PIN   19
 #define RED_LED_PIN     21
-#define MQTT_BROKER     "mqtt.example.com"
+#define MQTT_BROKER     "test.mosquitto.org"
 #define MQTT_PORT       1883
 #define MQTT_TOPIC      "tank/level"
-#define WIFI_SSID       "YOUR_WIFI_SSID"
-#define WIFI_PASS       "YOUR_WIFI_PASSWORD"
+#define WIFI_SSID       "1273"
+#define WIFI_PASS       "Password1273"
 
 #endif

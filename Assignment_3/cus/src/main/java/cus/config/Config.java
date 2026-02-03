@@ -12,7 +12,7 @@ public final class Config {
     public static final int N = 50;
 
     // MQTT
-    public static final String MQTT_BROKER = "tcp://localhost:1883";
+    public static final String MQTT_BROKER = "tcp://test.mosquitto.org:1883";
     public static final String MQTT_TOPIC = "tank/level";
     public static final String MQTT_CLIENT_ID = "CUS";
     public static final int MQTT_QOS = 1;

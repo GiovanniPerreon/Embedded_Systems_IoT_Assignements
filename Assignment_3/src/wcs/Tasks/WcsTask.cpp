@@ -23,8 +23,9 @@ void WcsTask::updateLcd() {
     lcd->clear();
     String valveStr = "Valve: " + String(valveLevel) + "%";
     lcd->printLCD(valveStr, 0, 0);
-    lcd->printLCD(modeStr, 1, 0);
+    lcd->printLCD(modeStr, 0, 1);
 }
+
 
 void WcsTask::setValveLevel(int percent) {
     if (percent < 0) percent = 0;
@@ -33,6 +34,7 @@ void WcsTask::setValveLevel(int percent) {
     int angle = map(percent, 0, 100, 0, 90);
     servo->setAngle(angle);
 }
+
 
 int WcsTask::readPotPercent() {
     int val = analogRead(potPin);
@@ -47,14 +49,19 @@ void WcsTask::setUnconnected() {
 }
 
 void WcsTask::tick() {
-    // Button toggles MANUAL/AUTOMATIC
+    // Handle incoming serial commands from CUS
+    handleSerialInput();
+
+    // Button toggles MANUAL/AUTOMATIC and notifies CUS
     if (button->isButtonPressed()) {
         if (state == MANUAL) {
             state = AUTOMATIC;
             modeStr = "AUTOMATIC";
+            Serial.println(CMD_MODE_AUTO);
         } else {
             state = MANUAL;
             modeStr = "MANUAL";
+            Serial.println(CMD_MODE_MANUAL);
         }
         updateLcd();
     }
@@ -65,24 +72,78 @@ void WcsTask::tick() {
                 setValveLevel(0);
                 modeStr = "UNCONNECTED";
                 updateLcd();
+                Serial.println(RESP_UNCONNECTED);
             }
             break;
         case AUTOMATIC:
             if (justEnteredState(AUTOMATIC)) {
                 modeStr = "AUTOMATIC";
                 updateLcd();
+                Serial.println(RESP_MODE_AUTO);
             }
-            // valveLevel is set automatically
-            setValveLevel(90 - valveLevel);
+            updateLcd();
             break;
         case MANUAL:
             if (justEnteredState(MANUAL)) {
                 modeStr = "MANUAL";
                 updateLcd();
+                Serial.println(RESP_MODE_MANUAL);
             }
-            // Read potentiometer and set valve
+            // In MANUAL mode, set valve from potentiometer
             setValveLevel(readPotPercent());
             updateLcd();
             break;
     }
+}
+
+void WcsTask::handleSerialInput() {
+    while (Serial.available()) {
+        char c = Serial.read();
+        if (c == '\n' || c == '\r') {
+            if (serialBuffer.length() > 0) {
+                String cmd = serialBuffer;
+                serialBuffer = "";
+                cmd.trim();
+                if (cmd == CMD_MODE_MANUAL) {
+                    state = MANUAL;
+                    modeStr = "MANUAL";
+                    Serial.println(RESP_MODE_MANUAL);
+                } else if (cmd == CMD_MODE_AUTO) {
+                    state = AUTOMATIC;
+                    modeStr = "AUTOMATIC";
+                    Serial.println(RESP_MODE_AUTO);
+                } else if (cmd.startsWith(CMD_VALVE_OPEN)) {
+                    int percent = cmd.substring(String(CMD_VALVE_OPEN).length()).toInt();
+                    setValveLevel(percent);
+                    updateLcd();
+                    Serial.print(RESP_VALVE_OPEN);
+                    Serial.println(percent);
+                } else if (cmd == CMD_STATUS) {
+                    sendStatusToCus();
+                } else if (cmd == "UNCONNECTED") {
+                    setUnconnected();
+                }
+            }
+        } else {
+            serialBuffer += c;
+        }
+    }
+}
+
+void WcsTask::sendStatusToCus() {
+    // Respond with current mode and valve level
+    switch (state) {
+        case MANUAL:
+            Serial.println(RESP_MODE_MANUAL);
+            break;
+        case AUTOMATIC:
+            Serial.println(RESP_MODE_AUTO);
+            break;
+        case UNCONNECTED:
+        default:
+            Serial.println(RESP_UNCONNECTED);
+            break;
+    }
+    Serial.print(RESP_VALVE_OPEN);
+    Serial.println(valveLevel);
 }

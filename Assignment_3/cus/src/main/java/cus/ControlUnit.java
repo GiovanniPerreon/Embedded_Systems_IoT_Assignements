@@ -41,10 +41,35 @@ public class ControlUnit {
 
         // 3. Connect MQTT
         try {
+            if (mqtt.isConnected()) {
+                mqtt.disconnect(); // Ensure clean disconnect before reconnect
+            }
             mqtt.connect();
         } catch (Exception e) {
             System.err.println("[WARN] Could not connect to MQTT: " + e.getMessage());
         }
+
+        // Start fast MQTT reconnect thread
+        Thread mqttReconnectThread = new Thread(() -> {
+            while (true) {
+                try {
+                    if (!mqtt.isConnected()) {
+                        System.out.println("[MQTT] Disconnected, attempting reconnect...");
+                        try {
+                            mqtt.disconnect(); // Ensure clean disconnect before reconnect
+                        } catch (Exception ignored) {}
+                        mqtt.connect();
+                    }
+                } catch (Exception e) {
+                    System.err.println("[MQTT] Reconnect failed: " + e.getMessage());
+                }
+                try {
+                    Thread.sleep(1000); // Check every 1 second (faster reconnect)
+                } catch (InterruptedException ignored) {}
+            }
+        }, "MqttReconnectThread");
+        mqttReconnectThread.setDaemon(true);
+        mqttReconnectThread.start();
 
         // 4. Start HTTP server
         http.start();

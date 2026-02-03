@@ -22,16 +22,19 @@ private:
     int valveLevel; // 0-100 percent
     String modeStr;
 
+    String serialBuffer;
+
     bool justEnteredState(State newState);
     void updateLcd();
     void setValveLevel(int percent);
     int readPotPercent();
+    void handleSerialInput();
+    void sendStatusToCus();
 
 public:
     WcsTask(LCDTask* lcd, ServoTask* servo, ButtonTask* button, int potPin);
     void init(int period) override;
     void tick() override;
-    void setAutomaticLevel(int percent); // Called by CUS or external logic
     void setUnconnected();
     State getState() const { return state; }
     int getValveLevel() const { return valveLevel; }
