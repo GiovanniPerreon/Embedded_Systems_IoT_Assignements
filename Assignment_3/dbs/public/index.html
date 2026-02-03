@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Tank Monitoring Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Smart Tank Monitoring System</h1>
+        <p class="subtitle">Dashboard for Rainwater Tank & Water Channel Control</p>
+    </header>
+    <main>
+        <section class="status-panel">
+            <div class="status-item">
+                <span class="label">System State:</span>
+                <span class="value state">UNCONNECTED</span>
+            </div>
+            <div class="status-item">
+                <span class="label">Valve Opening:</span>
+                <span class="value valve">--</span>
+            </div>
+        </section>
+        <section class="graph-panel">
+            <h2>Rainwater Level</h2>
+            <div class="graph-placeholder">graph data is not available</div>
+        </section>
+        <section class="controls-panel">
+            <h2>Controls</h2>
+            <div class="controls">
+                <button class="mode-btn">Switch Mode</button>
+                <label for="valve-slider">Valve Opening (Manual):</label>
+                <input type="range" id="valve-slider" min="0" max="100" value="50" disabled>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>Smart Tank Monitoring System</p>
+    </footer>
+    <script src="config.js"></script>
+    <script src="../src/dashboard.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
