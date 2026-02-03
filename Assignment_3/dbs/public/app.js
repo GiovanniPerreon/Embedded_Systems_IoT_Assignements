@@ -73,11 +73,12 @@ function updateDashboard(data) {
         valveEl.textContent = data.valveOpenPercent + '%';
         currentMode = data.mode;
         modeBtn.disabled = false;
-        if (lastRequestedMode === 'MANUAL') {
+        // Only enable slider if system is in MANUAL mode (from backend!)
+        if (data.mode === 'MANUAL') {
             valveSlider.disabled = false;
         }
     }
-    modeBtn.textContent = lastRequestedMode === 'MANUAL' ? 'Switch to AUTOMATIC' : 'Switch to MANUAL';
+    modeBtn.textContent = (currentMode === 'MANUAL') ? 'Switch to AUTOMATIC' : 'Switch to MANUAL';
     valveSlider.value = data.valveOpenPercent;
     if (window.renderWaterLevelGraph) {
         window.renderWaterLevelGraph(data.waterLevelHistory, graphPlaceholder);
@@ -111,15 +112,15 @@ modeBtn.addEventListener('click', async () => {
 });
 
 valveSlider.addEventListener('input', async (e) => {
-    if (!isAvailable || lastRequestedMode !== 'MANUAL' || currentMode === 'UNCONNECTED' || currentMode === 'NOT AVAILABLE') {
-        alert(currentMode === 'NOT AVAILABLE' ? 'Cannot set valve: backend not available' : 'Cannot set valve: system is UNCONNECTED');
+    if (!isAvailable || currentMode !== 'MANUAL' || currentMode === 'UNCONNECTED' || currentMode === 'NOT AVAILABLE') {
+        alert(currentMode === 'NOT AVAILABLE' ? 'Cannot set valve: backend not available' : 'Cannot set valve: system is UNCONNECTED or not in MANUAL mode');
         return;
     }
     const percent = parseInt(e.target.value, 10);
     const result = await setValve(percent);
     if (!result.success) {
         alert(result.error || 'Failed to set valve');
-    } else {
-        valveEl.textContent = percent + '%';
     }
+    // Always fetch state after setting, to sync with backend
+    fetchState();
 });

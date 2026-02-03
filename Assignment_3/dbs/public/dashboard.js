@@ -1,8 +1,10 @@
 window.renderWaterLevelGraph = function(history, container) {
+    console.log('renderWaterLevelGraph called with history:', history);
 
     let canvas = container.querySelector('canvas');
     if (canvas) container.removeChild(canvas);
     if (!history || history.length === 0) {
+        console.log('No history data available');
         container.textContent = 'No data';
         return;
     }

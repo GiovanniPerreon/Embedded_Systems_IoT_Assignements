@@ -12,6 +12,7 @@ class WcsTask : public Task {
 public:
     enum State { UNCONNECTED, AUTOMATIC, MANUAL };
 
+
 private:
     State state;
     int lastState;
@@ -20,6 +21,10 @@ private:
     ButtonTask* button;
     int potPin;
     int valveLevel; // 0-100 percent
+    int lastSentValveLevel; // for MANUAL mode reporting
+    int manualOverrideValue; // last value set by website
+    bool manualOverrideActive; // true if website set value and pot hasn't changed
+    int lastPotPercent; // last potentiometer reading to detect movement
     String modeStr;
 
     String serialBuffer;

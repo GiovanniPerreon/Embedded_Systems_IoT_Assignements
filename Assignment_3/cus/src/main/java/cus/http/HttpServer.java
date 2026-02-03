@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import cus.config.Config;
 import cus.model.SystemMode;
 import cus.model.SystemState;
+import cus.policy.WaterLevelPolicy;
 import cus.serial.SerialHandler;
 import io.javalin.Javalin;
 
@@ -15,11 +16,13 @@ public class HttpServer {
     private final SerialHandler serial;
     private final Gson gson;
     private Javalin app;
+    private final WaterLevelPolicy policy;
 
-    public HttpServer(SystemState state, SerialHandler serial) {
+    public HttpServer(SystemState state, SerialHandler serial, WaterLevelPolicy policy) {
         this.state = state;
         this.serial = serial;
         this.gson = new GsonBuilder().create();
+        this.policy = policy;
     }
 
     public void start() {
@@ -90,6 +93,14 @@ public class HttpServer {
                     serial.sendModeManual();
                 } else {
                     serial.sendModeAuto();
+                    // Force policy to re-evaluate and send valve position
+                    policy.forceEvaluation();
+                    try {
+                        Thread.sleep(100);
+                        serial.sendStatusQuery();
+                    } catch (InterruptedException e) {
+                        // Ignore
+                    }
                 }
 
                 response.addProperty("success", true);

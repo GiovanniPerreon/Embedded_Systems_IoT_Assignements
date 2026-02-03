@@ -1,13 +1,17 @@
 #include "WcsTask.h"
 
 WcsTask::WcsTask(LCDTask* lcd, ServoTask* servo, ButtonTask* button, int potPin)
-    : state(UNCONNECTED), lastState(-1), lcd(lcd), servo(servo), button(button), potPin(potPin), valveLevel(0) {}
+    : state(UNCONNECTED), lastState(-1), lcd(lcd), servo(servo), button(button), potPin(potPin), valveLevel(0), lastSentValveLevel(-1), manualOverrideValue(-1), manualOverrideActive(false), lastPotPercent(-1) {}
 
 void WcsTask::init(int period) {
     Task::init(period);
     state = UNCONNECTED;
     lastState = -1;
     valveLevel = 0;
+    lastSentValveLevel = -1;
+    manualOverrideValue = -1;
+    manualOverrideActive = false;
+    lastPotPercent = -1;
     modeStr = "UNCONNECTED";
 }
 
@@ -78,21 +82,41 @@ void WcsTask::tick() {
         case AUTOMATIC:
             if (justEnteredState(AUTOMATIC)) {
                 modeStr = "AUTOMATIC";
+                manualOverrideActive = false;
+                manualOverrideValue = -1;
                 updateLcd();
                 Serial.println(RESP_MODE_AUTO);
             }
             updateLcd();
             break;
-        case MANUAL:
+        case MANUAL: {
             if (justEnteredState(MANUAL)) {
                 modeStr = "MANUAL";
                 updateLcd();
                 Serial.println(RESP_MODE_MANUAL);
+                manualOverrideActive = false;
+                manualOverrideValue = -1;
             }
-            // In MANUAL mode, set valve from potentiometer
-            setValveLevel(readPotPercent());
-            updateLcd();
+            int potPercent = readPotPercent();
+            if (manualOverrideActive) {
+                // Only resume pot control if user moves the potentiometer
+                setValveLevel(manualOverrideValue);
+                updateLcd();
+                if (abs(potPercent - lastPotPercent) > 3) {
+                    manualOverrideActive = false;
+                }
+            } else {
+                setValveLevel(potPercent);
+                updateLcd();
+                if (potPercent != lastSentValveLevel) {
+                    Serial.print(CMD_VALVE_OPEN);
+                    Serial.println(potPercent);
+                    lastSentValveLevel = potPercent;
+                }
+            }
+            lastPotPercent = potPercent;
             break;
+        }
     }
 }
 
@@ -108,14 +132,18 @@ void WcsTask::handleSerialInput() {
                     state = MANUAL;
                     modeStr = "MANUAL";
                     Serial.println(RESP_MODE_MANUAL);
+                    sendStatusToCus();
                 } else if (cmd == CMD_MODE_AUTO) {
                     state = AUTOMATIC;
                     modeStr = "AUTOMATIC";
                     Serial.println(RESP_MODE_AUTO);
+                    sendStatusToCus();
                 } else if (cmd.startsWith(CMD_VALVE_OPEN)) {
                     int percent = cmd.substring(String(CMD_VALVE_OPEN).length()).toInt();
                     setValveLevel(percent);
                     updateLcd();
+                    manualOverrideValue = percent;
+                    manualOverrideActive = true;
                     Serial.print(RESP_VALVE_OPEN);
                     Serial.println(percent);
                 } else if (cmd == CMD_STATUS) {

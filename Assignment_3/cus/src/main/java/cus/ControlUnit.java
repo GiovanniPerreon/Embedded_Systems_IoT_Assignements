@@ -22,8 +22,8 @@ public class ControlUnit {
         this.state = new SystemState();
         this.serial = new SerialHandler();
         this.mqtt = new MqttHandler(state);
-        this.http = new HttpServer(state, serial);
         this.policy = new WaterLevelPolicy(state, serial);
+        this.http = new HttpServer(state, serial, policy);
     }
 
     public void start(String serialPort) {

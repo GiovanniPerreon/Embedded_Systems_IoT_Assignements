@@ -41,10 +41,10 @@ void TmsTask::tick() {
     redLedTask->on();
   }
 
-  // Publish to MQTT every 1s
+  // Publish to MQTT at configured interval
   if (mqttOk) {
     unsigned long now = millis();
-    if (now - lastMqttPublish > 1000) {
+    if (now - lastMqttPublish > F) {
       publishLevel();
       lastMqttPublish = now;
     }

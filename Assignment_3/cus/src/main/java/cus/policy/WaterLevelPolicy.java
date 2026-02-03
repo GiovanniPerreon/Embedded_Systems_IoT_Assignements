@@ -90,4 +90,8 @@ public class WaterLevelPolicy implements Runnable {
     public void stop() {
         running = false;
     }
+
+    public void forceEvaluation() {
+        lastSentValvePercent = -1;
+    }
 }
