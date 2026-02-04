@@ -15,14 +15,12 @@ TmsTask::TmsTask(BlinkTask* greenLedTask, BlinkTask* redLedTask, UltrasonicTask*
   lastMqttPublish = 0;
 }
 
-
 void TmsTask::init(int period) {
   Task::init(period);
   greenLedTask->off();
   redLedTask->off();
   lastMqttPublish = 0;
 }
-
 
 void TmsTask::tick() {
   ultrasonicTask->tick();
@@ -31,7 +29,6 @@ void TmsTask::tick() {
   Serial.print(distance);
   Serial.println(" cm");
 
-  // Assignment: green ON and red OFF when network/MQTT is OK and sending data, else red ON and green OFF
   bool mqttOk = (mqttClient && mqttClient->connected());
   if (mqttOk) {
     greenLedTask->on();

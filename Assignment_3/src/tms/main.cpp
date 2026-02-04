@@ -1,5 +1,3 @@
-
-#include "Kernel/kernel.h"
 #include "config.h"
 #include "Tasks/BlinkTask.h"
 #include "Tasks/UltrasonicTask.h"

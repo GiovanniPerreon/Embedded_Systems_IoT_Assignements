@@ -12,7 +12,6 @@
 #define WIFI_SSID       "1273"
 #define WIFI_PASS       "Password1273"
 
-// Sampling/publish interval in milliseconds (F = 1000/interval Hz)
 #define F 1000
 
 #endif
