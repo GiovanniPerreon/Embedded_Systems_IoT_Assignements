@@ -9,13 +9,14 @@ class ButtonTask: public Task {
   int pin;
   enum { PRESSED, NOT_PRESSED} state;
   Button* button;
+  bool pressedEventFlag;  // Flag for single press event
 
 public:
 
   ButtonTask(int pin);  
   void init(int period);  
   void tick();
-  bool isButtonPressed();
+  bool isButtonPressed();  // Returns true only once per press
 };
 
 #endif

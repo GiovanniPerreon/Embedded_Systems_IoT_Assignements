@@ -19,7 +19,7 @@ void initState(){
   if (isJustEnteredInState()){
     // Initialize tasks for WCS
     ButtonTask* buttonTask = new ButtonTask(BUTTON_PIN);
-    buttonTask->init(50);
+    buttonTask->init(100);
     ServoTask* servoTask = new ServoTask(SERVO_PIN);
     servoTask->init(100);
     LCDTask* lcdTask = new LCDTask(LCD_ADDR, LCD_COLS, LCD_ROWS);
