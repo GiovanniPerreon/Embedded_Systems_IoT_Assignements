@@ -17,7 +17,7 @@ extern Scheduler sched;
 
 void initCore(){
   Serial.begin(9600);
-  sched.init(100);
+  sched.init(50);
 }
 
 void initState(){
