@@ -1,6 +1,6 @@
 Istruzioni per avviare il server statico per la dashboard con python su windows:
 Aprire il terminale nel folder del progetto poi:
-cd dbs/public
+cd dbs/src
 python -m http.server 5500
 
 Aprire sul browser: http://localhost:5500/
